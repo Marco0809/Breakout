@@ -19,7 +19,9 @@ Break.Preloader.prototype = {
     this.load.image('soundbutton','images/soundbutton.png');
     this.load.image('hardbutton','images/hardbutton.png');  
     this.load.image('supermario','images/supermario.png');  
-    this.load.image('boden','images/boden.png'); 	
+    this.load.image('boden','images/boden.png'); 
+    this.load.image('test1','images/test1.png');  
+    this.load.image('test2','images/test2.png'); 	
 
 
 
