@@ -1,7 +1,6 @@
 Break.MainMenu = function (game) {
-    var startbutton, soundbutton, hardbutton, level1button, level2button, level3button, Zurueckbutton, Soundreglerbutton, supermario, boden;
-    //var key1;
-    //var key2;
+    var button1, button2, button3, button4,supermario, boden, button1count, button2count, button3count,button4count;
+    
 };
 
 Break.MainMenu.prototype = {
@@ -10,26 +9,13 @@ Break.MainMenu.prototype = {
         //Activate Keyboard
         cursors = this.input.keyboard.createCursorKeys();
 
-
-
         background = this.add.tileSprite(0, 0, 1024, 768, 'mario0');
 
-
-
-        /* Bitte nicht löschen
-        key1 = this.game.input.keyboard.addKey(Phaser.Keyboard.LEFT);
-        key1.onDown.add(this.movemarioleft, this);
-        key2 = this.game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);
-        key2.onDown.add(this.movemarioright, this);
-        */
-
-        //
+        //Mario
         supermario = this.add.sprite(190, 580, 'supermario');
         supermario.scale.set(0.5);
         supermario.anchor.set(0.5);
-
         this.physics.arcade.enable(supermario);
-
         supermario.body.velocity.setTo(0, 0);
         supermario.body.gravity.set(0, 6000);
         supermario.body.collideWorldBounds = true;
@@ -37,7 +23,7 @@ Break.MainMenu.prototype = {
         supermario.body.bounce.set(0.21);
 
 
-        //
+        //Boden
         boden= this.add.sprite(0, 705, 'boden');
         this.physics.arcade.enable(boden);
 
@@ -47,95 +33,73 @@ Break.MainMenu.prototype = {
         boden.body.bounce.set(1);
 
 
-        //Startknopf
+        //Linker Knopf
+        button1= this.add.sprite(180, 422, 'menuebutton');
+        button1.anchor.setTo(0.5,0.5);
+        button1.scale.set(0.13);
+        this.physics.arcade.enable(button1);
+        button1.body.immovable = true;
+        button1.body.collideWorldBounds = true;
+        button1.checkWorldBounds = true;
+        button1.body.bounce.set(1);
 
-        startbutton= this.add.sprite(200, 422, 'startbutton');
-        startbutton.anchor.setTo(0.5,0.5);
-        this.physics.arcade.enable(startbutton);
-        startbutton.body.immovable = true;
-        startbutton.body.collideWorldBounds = true;
-        startbutton.checkWorldBounds = true;
-        startbutton.body.bounce.set(1);
+        //Zweiter von Links
+        button2= this.add.sprite(396, 422, 'menuebutton');
+        button2.anchor.setTo(0.5,0.5);
+        button2.scale.set(0.13);
+        this.physics.arcade.enable(button2);
+        button2.body.immovable = true;
+        button2.body.collideWorldBounds = true;
+        button2.checkWorldBounds = true;
+        button2.body.bounce.set(1);
 
-        //Soundknopf
-        soundbutton= this.add.sprite(830, 422, 'soundbutton');
-        soundbutton.anchor.setTo(0.5,0.5);
-        this.physics.arcade.enable(soundbutton);
-        soundbutton.body.immovable = true;
-        soundbutton.body.collideWorldBounds = true;
-        soundbutton.checkWorldBounds = true;
-        soundbutton.body.bounce.set(1);
+        //Zweiter von Rechts
+        button3= this.add.sprite(612, 422, 'menuebutton');
+        button3.anchor.setTo(0.5,0.5);
+        button3.scale.set(0.13);
+        this.physics.arcade.enable(button3);
+        button3.body.immovable = true;
+        button3.body.collideWorldBounds = true;
+        button3.checkWorldBounds = true;
+        button3.body.bounce.set(1);
 
-        //Schwierigkeitsknopf
+        //Rechter Knopf
 
-         hardbutton= this.add.sprite(515, 422, 'hardbutton');
-        hardbutton.anchor.setTo(0.5,0.5);
-        hardbutton.scale.set(0.13);
-        this.physics.arcade.enable(hardbutton);
-        hardbutton.body.immovable = true;
-        hardbutton.body.collideWorldBounds = true;
-        hardbutton.checkWorldBounds = true;
-        hardbutton.body.bounce.set(1);
-
-        //Level1
-
-        level1button= this.add.sprite(200, 300, 'test1');
-        level1button.anchor.setTo(0.5,0.5);
-        this.physics.arcade.enable(level1button);
-        level1button.body.immovable = true;
-        level1button.body.collideWorldBounds = true;
-        level1button.checkWorldBounds = true;
-        level1button.body.bounce.set(1);
-        level1button.visible=false;
-        level1button.body.enable=false;
-
-        //Level2
-        level2button= this.add.sprite(515, 421, 'test2');
-        level2button.anchor.setTo(0.5,0.5);
-        this.physics.arcade.enable(level2button);
-        level2button.body.immovable = true;
-        level2button.body.collideWorldBounds = true;
-        level2button.checkWorldBounds = true;
-        level2button.body.bounce.set(1);
-        level2button.visible=false;
-        level2button.body.enable=false;
-
-        //Level3
-
-        level3button = this.add.sprite(830, 421, 'test1');
-        level3button.anchor.setTo(0.5,0.5);
-        level3button.scale.set(0.13);
-        this.physics.arcade.enable(level3button);
-        level3button.body.immovable = true;
-        level3button.body.collideWorldBounds = true;
-        level3button.checkWorldBounds = true;
-        level3button.body.bounce.set(1);
-        level3button.visible=false;
-        level3button.body.enable=false;
-
-        //SoundAn/Aus
-
-        Soundreglerbutton= this.add.sprite(200, 422, 'test1');
-        Soundreglerbutton.anchor.setTo(0.5,0.5);
-        this.physics.arcade.enable(Soundreglerbutton);
-        Soundreglerbutton.body.immovable = true;
-        Soundreglerbutton.body.collideWorldBounds = true;
-        Soundreglerbutton.checkWorldBounds = true;
-        Soundreglerbutton.body.bounce.set(1);
-        Soundreglerbutton.visible=false;
-        Soundreglerbutton.body.enable=false;
+        button4= this.add.sprite(830, 422, 'menuebutton');
+        button4.anchor.setTo(0.5,0.5);
+        button4.scale.set(0.13);
+        this.physics.arcade.enable(button4);
+        button4.body.immovable = true;
+        button4.body.collideWorldBounds = true;
+        button4.checkWorldBounds = true;
+        button4.body.bounce.set(1);
         
-        //Zurück
-        Zurueckbutton= this.add.sprite(830, 422, 'test2');
-        Zurueckbutton.anchor.setTo(0.5,0.5);
-        this.physics.arcade.enable(Zurueckbutton);
-        Zurueckbutton.body.immovable = true;
-        Zurueckbutton.body.collideWorldBounds = true;
-        Zurueckbutton.checkWorldBounds = true;
-        Zurueckbutton.body.bounce.set(1);
-        Zurueckbutton.visible=false;
-        Zurueckbutton.body.enable=false;
+        //Startbeschriftung
+        startfont= this.add.sprite(110, 395, 'startfont');
+        soundfont= this.add.sprite(326, 395, 'soundfont');
+        weicheifont= this.add.sprite(542, 397, 'weicheifont');
+        editorfont= this.add.sprite(758, 395, 'editorfont');
+        startfont.scale.set(0.13);
+        soundfont.scale.set(0.13);
+        weicheifont.scale.set(0.13);
+        editorfont.scale.set(0.13);
         
+        button1count = 0;
+        button2count = 0;
+        button3count = 0;
+        button4count = 0;
+        
+        
+        // Deklarieren der übrigen BEschriftungen
+        heldfont= this.add.sprite(564, 398, 'heldfont');
+        heldfont.scale.set(0.13);
+        heldfont.visible=false;
+
+        psychofont= this.add.sprite(543, 399, 'psychofont');
+        psychofont.scale.set(0.13);
+        psychofont.visible=false;
+        
+
       
     },
     
@@ -144,14 +108,11 @@ Break.MainMenu.prototype = {
     update: function() {
 	
 	    this.physics.arcade.collide(supermario, boden);
-        this.physics.arcade.collide(supermario, startbutton, this.marioHitStart, null, this);
-        this.physics.arcade.collide(supermario, hardbutton, this.marioHitDiff, null, this);
-        this.physics.arcade.collide(supermario, soundbutton, this.marioHitSound, null, this);
-        this.physics.arcade.collide(supermario, level1button, this.marioHitLevel1, null, this);
-        this.physics.arcade.collide(supermario, level2button, this.marioHitLevel2, null, this);
-        this.physics.arcade.collide(supermario, level3button, this.marioHitLevel3, null, this);
-        this.physics.arcade.collide(supermario, Soundreglerbutton, this.marioHitSetSound, null, this);
-        this.physics.arcade.collide(supermario, Zurueckbutton, this.marioHitBack, null, this);
+        this.physics.arcade.collide(supermario, button1, this.marioHitButton1, null, this);
+        this.physics.arcade.collide(supermario, button2, this.marioHitButton2, null, this);
+        this.physics.arcade.collide(supermario, button3, this.marioHitButton3, null, this);
+        this.physics.arcade.collide(supermario, button4, this.marioHitButton4, null, this);
+        
 	
 
 	
@@ -191,88 +152,62 @@ Break.MainMenu.prototype = {
 	
 
     
-    marioHitStart: function() {
+    marioHitButton1: function() {
        
         if(supermario.body.touching.up){
-            startbutton.visible=false;
-            startbutton.body.enable=false;
-            soundbutton.visible=false;
-            soundbutton.body.enable=false;
-            hardbutton.visible=false;
-            hardbutton.body.enable=false;
+           
+       
             
-            level1button.visible=true;
-            level1button.body.enable=true;
-            
-            level2button.visible=true;
-            level2button.body.enable=true;
-            
-            level3button.visible=true;
-            level3button.body.enable=true;
             
         }
     },
     
-    marioHitSound: function() {
+    marioHitButton2: function() {
         
         if(supermario.body.touching.up){
-            startbutton.visible=false;
-            startbutton.body.enable=false;
-            soundbutton.visible=false;
-            soundbutton.body.enable=false;
-            hardbutton.visible=false;
-            hardbutton.body.enable=false;
             
-            Soundreglerbutton.visible=true;
-            Soundreglerbutton.body.enable=true;
-            Zurueckbutton.visible=true;
-            Zurueckbutton.body.enable=true;
             
+           
         }
     },
     
-    marioHitDiff: function() {
-        
+    marioHitButton3: function() {
         if(supermario.body.touching.up){
-            startbutton.visible=false;
-            startbutton.body.enable=false;
-            soundbutton.visible=false;
-            soundbutton.body.enable=false;
-            hardbutton.visible=false;
-            hardbutton.body.enable=false;
+        switch(button3count) {
+            case 0:
+                weicheifont.visible=false;
+                heldfont.visible=true;
+                button3count+=1;
+                break;
+            case 1:
+                heldfont.visible=false;
+                psychofont.visible=true;
+                button3count+=1;
+                break;
+            case 2:
+                psychofont.visible=false;
+                weicheifont.visible=true;
+                button3count=0;
+                break;
+
+        }
+                
+                
+        
+            
             
         }
     },
     
-    marioHitLevel1: function() {
+    marioHitButton4: function() {
         if(supermario.body.touching.up){
-            this.game.state.start('Game');
+           // this.game.state.start('Game');
             
         }
         
         
-    },
+    }
     
-    marioHitLevel2: function() {
-    },
-
-    marioHitLevel3: function() {
-    },
-
-    marioHitSetSound: function() {
-    },
-
-    marioHitBack: function() {
-
-            if(supermario.body.touching.up){
-                startbutton.visible=true;
-                startbutton.body.enable=true;
-                soundbutton.visible=true;
-                soundbutton.body.enable=true;
-                hardbutton.visible=true;
-                hardbutton.body.enable=true;
-
-            }
-        }
+   
     
 };
