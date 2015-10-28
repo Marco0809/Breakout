@@ -12,6 +12,7 @@ Break.MainMenu = function (game) {
     var editorstate=0;
     var soundon = true;
     var musicon = true;
+    var schwierigkeit = 0;
     
 Break.MainMenu.prototype = {
     create: function () {
@@ -232,8 +233,8 @@ Break.MainMenu.prototype = {
     
     marioHitButton1: function() {
         if(supermario.body.touching.up){
-            if(soundstate==0 && editorstate==0 &&startstate==0){ 
-                startstate =1;
+            if(editorstate==0 && soundstate==0){ 
+                
                 switch(button1count) {
                     case 0:
                         
@@ -362,16 +363,20 @@ Break.MainMenu.prototype = {
                         weicheilabel.visible=false;
                         heldlabel.visible=true;
                         button3count+=1;
+                        schwierigkeit =2;
                         break;
                     case 1:
                         heldlabel.visible=false;
                         psycholabel.visible=true;
                         button3count+=1;
+                        schwierigkeit=3;
                         break;
                     case 2:
                         psycholabel.visible=false;
                         weicheilabel.visible=true;
                         button3count=0;
+                        schwierigkeit=0;
+                        
                         break;
 
                 }
@@ -420,7 +425,6 @@ Break.MainMenu.prototype = {
     marioHitButton4: function() {
         if(supermario.body.touching.up){
            
-            this.startLevel1();
         }
         
         

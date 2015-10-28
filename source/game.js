@@ -32,7 +32,7 @@ Break.Game.prototype = {
         //Hinzufügen der Blöcke 
         bricks = this.add.group();
         bricks.enableBody = true;
-
+        
         bottom = this.add.group();
         bottom.enableBody = true;
 
