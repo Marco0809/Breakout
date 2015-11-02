@@ -8,6 +8,8 @@ Break.Game =function(game) {
     var scoreText;
     var life = 3;
     var lifeText;
+	var alreadyHittedBricks = [];
+	var arrayIndex = 0; // the current index of the alreadyHittedBricks array will be save here
 
 Break.Game.prototype = {
     create: function() {
@@ -32,7 +34,11 @@ Break.Game.prototype = {
         //Hinzufügen der Blöcke 
         bricks = this.add.group();
         bricks.enableBody = true;
-        
+
+		
+		strongBricks = this.add.group();
+		strongBricks.enableBody = true;
+
         bottom = this.add.group();
         bottom.enableBody = true;
 
@@ -47,14 +53,16 @@ Break.Game.prototype = {
                 }
             }
 
+			var i = 0;
             for (var y = 3; y < 5; y++)
             {
                 for (var x = 0; x < 14; x++)
                 {
                     var brick;
-                    brick = bricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
+                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
                     brick.body.bounce.set(1);
                     brick.body.immovable = true;
+					alreadyHittedBricks[i] = 0;
                 }
             }
 
@@ -116,6 +124,7 @@ Break.Game.prototype = {
         }
 
         this.physics.arcade.collide(ball, bricks, this.ballHitBrick, null, this);
+		this.physics.arcade.collide(ball, strongBricks, this.ballHitStrongBrick, null, this);
         this.physics.arcade.collide(ball, cursor, this.ballHitCursor, null, this);
     },
 
@@ -152,7 +161,30 @@ Break.Game.prototype = {
         myBrick.kill();
 
 
-    },  
+    }, 
+
+	
+	ballHitStrongBrick: function(myBall, myBrick) { //Function which handles what should happen when a Strong Brick has been hitted
+
+	
+		if(alreadyHittedBricks.indexOf(myBrick) == -1)//Check if the Brick was already hitted once{
+			
+			alreadyHittedBricks[arrayIndex] = myBrick;
+			arrayIndex ++;
+			myBrick.loadTexture('Schwer3',0);
+			score = score +10;
+			scoreText.text = 'Score: ' + score;
+		}
+		else{
+			score = score +10;
+			scoreText.text = 'Score: ' + score;
+			myBrick.kill();
+		}
+			
+       
+
+
+    }, 	
 
     ballHitBottom: function(myBall) {
 
