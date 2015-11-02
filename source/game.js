@@ -167,7 +167,7 @@ Break.Game.prototype = {
 	ballHitStrongBrick: function(myBall, myBrick) { //Function which handles what should happen when a Strong Brick has been hitted
 
 	
-		if(alreadyHittedBricks.indexOf(myBrick) == -1)//Check if the Brick was already hitted once{
+		if(alreadyHittedBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
 			
 			alreadyHittedBricks[arrayIndex] = myBrick;
 			arrayIndex ++;

@@ -242,6 +242,7 @@ Break.MainMenu.prototype = {
                          button1count+=1;
                         break;
                     case 1:
+                       
                         this.showLevelMenu();
                         button1count+=1;
                         startstate=2;
