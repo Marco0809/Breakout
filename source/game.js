@@ -20,7 +20,7 @@ Break.Game.prototype = {
 
 
         //Hinzufügen des Cursors
-        cursor= this.add.sprite(this.world.centerX, 745, 'cursor');
+        cursor= this.add.sprite(this.world.centerX, 735, 'cursor');
         cursor.anchor.setTo(0.5, 0.5);
         this.physics.arcade.enable(cursor);
         cursor.body.immovable = true;
@@ -178,6 +178,7 @@ Break.Game.prototype = {
         //Hinzufügen des Balls
         ball = this.add.sprite(cursor.x, cursor.y-32, 'ball');
         ball.anchor.set(0.5);
+        ball.scale.setTo(0.03);
 
         this.physics.arcade.enable(ball);
 
