@@ -239,7 +239,7 @@ Break.MainMenu.prototype = {
                     case 0:
                         
                         this.showPlayerMenu();
-                         button1count+=1;
+                        button1count+=1;
                         break;
                     case 1:
                        

@@ -29,7 +29,7 @@ Break.Game.prototype = {
         cursor.body.collideWorldBounds = true;
         cursor.body.bounce.set(1);
 
-       this.createBall();
+        this.createBall();
 
         //Hinzufügen der Blöcke 
         bricks = this.add.group();
@@ -48,6 +48,7 @@ Break.Game.prototype = {
                 {
                     var brick;
                     brick = bricks.create(100 + (x * 60), 100 + (y * 50), 'leicht', 'leicht.png');
+                    brick.scale.set(0.1);
                     brick.body.bounce.set(1);
                     brick.body.immovable = true;
                 }
@@ -210,7 +211,7 @@ Break.Game.prototype = {
         //Hinzufügen des Balls
         ball = this.add.sprite(cursor.x, cursor.y-32, 'ball');
         ball.anchor.set(0.5);
-        ball.scale.setTo(0.03);
+        //ball.scale.setTo(0.03);
 
         this.physics.arcade.enable(ball);
 
