@@ -211,7 +211,7 @@ Break.Game.prototype = {
         //Hinzufügen des Balls
         ball = this.add.sprite(cursor.x, cursor.y-32, 'ball');
         ball.anchor.set(0.5);
-        //ball.scale.setTo(0.03);
+        ball.scale.setTo(0.025);
 
         this.physics.arcade.enable(ball);
 
