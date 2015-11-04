@@ -17,9 +17,15 @@ Break.Game.prototype = {
         //Variabeln
         ballreleased=false;
 
+<<<<<<< HEAD
        
 
 		this.LevelEins();
+=======
+        //Hintergrund
+        land = this.add.tileSprite(0, 0, 1024, 768, 'mario1');
+        
+>>>>>>> da52a4526c5855a04473195ef489585ef505d751
 
         //Hinzufügen des Cursors
         cursor= this.add.sprite(this.world.centerX, 735, 'cursor');
@@ -29,9 +35,52 @@ Break.Game.prototype = {
         cursor.body.collideWorldBounds = true;
         cursor.body.bounce.set(1);
 
+        
         this.createBall();
+<<<<<<< HEAD
 
        
+=======
+        
+        //Hinzufügen der Blöcke 
+        bricks = this.add.group();
+        bricks.enableBody = true;
+
+		
+		strongBricks = this.add.group();
+		strongBricks.enableBody = true;
+
+        bottom = this.add.group();
+        bottom.enableBody = true;
+
+            for (var y = 0; y < 3; y++)
+            {
+                for (var x = 0; x < 14; x++)
+                {
+                    var brick;
+                    brick = bricks.create(100 + (x * 60), 100 + (y * 50), 'leicht', 'leicht.png');
+                    brick.scale.set(0.1);
+                    brick.body.bounce.set(1);
+                    brick.body.immovable = true;
+                }
+            }
+
+			var i = 0;
+            for (var y = 3; y < 5; y++)
+            {
+                for (var x = 0; x < 14; x++)
+                {
+                    var brick;
+                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
+                    brick.body.bounce.set(1);
+                    brick.body.immovable = true;
+					alreadyHittedBricks[i] = 0;
+                }
+            }
+
+        var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
+
+>>>>>>> da52a4526c5855a04473195ef489585ef505d751
         //Hinzufügen von Score
         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -57,7 +106,11 @@ Break.Game.prototype = {
             ball.body.allowGravity = true;
             ballreleased = true;
             ball.body.immovable = false;
+            if(difficulty==1){
             ball.body.velocity.y=-450;
+            } else{
+               ball.body.velocity.y=-1050;
+            }
         }
         else {}
         }
