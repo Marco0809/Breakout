@@ -50,17 +50,12 @@ Break.Preloader.prototype = {
     this.load.image('test1','images/test1.png');  
     this.load.image('test2','images/test2.png');
     this.load.image('menuebutton','images/startbutton1.png');
-<<<<<<< HEAD
+
 	
 	// Musik
 	this.load.audio('SoundLevel1', 'sounds/SoundLevel1.mp3');
 	this.load.audio('HitBrickSound', 'sounds/HitBrickSound.mp3');
 	this.load.audio('HitStrongBrickSound', 'sounds/HitStrongBrickSound.wav');
-
-=======
-        
-        
->>>>>>> fbd22a07cfacd3e99a48db547d70370a88fb97a0
 
 
 
