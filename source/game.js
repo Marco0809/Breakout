@@ -19,7 +19,7 @@ Break.Game.prototype = {
 
         //Hintergrund
         land = this.add.tileSprite(0, 0, 1024, 768, 'mario1');
-
+        
 
         //Hinzufügen des Cursors
         cursor= this.add.sprite(this.world.centerX, 735, 'cursor');
@@ -29,8 +29,9 @@ Break.Game.prototype = {
         cursor.body.collideWorldBounds = true;
         cursor.body.bounce.set(1);
 
+        
         this.createBall();
-
+        
         //Hinzufügen der Blöcke 
         bricks = this.add.group();
         bricks.enableBody = true;
@@ -94,7 +95,11 @@ Break.Game.prototype = {
             ball.body.allowGravity = true;
             ballreleased = true;
             ball.body.immovable = false;
+            if(difficulty==1){
             ball.body.velocity.y=-450;
+            } else{
+               ball.body.velocity.y=-1050;
+            }
         }
         else {}
         }
