@@ -17,9 +17,9 @@ Break.Game.prototype = {
         //Variabeln
         ballreleased=false;
 
-        //Hintergrund
-        land = this.add.tileSprite(0, 0, 1024, 768, 'mario1');
+       
 
+		this.LevelEins();
 
         //Hinzufügen des Cursors
         cursor= this.add.sprite(this.world.centerX, 735, 'cursor');
@@ -31,44 +31,7 @@ Break.Game.prototype = {
 
         this.createBall();
 
-        //Hinzufügen der Blöcke 
-        bricks = this.add.group();
-        bricks.enableBody = true;
-
-		
-		strongBricks = this.add.group();
-		strongBricks.enableBody = true;
-
-        bottom = this.add.group();
-        bottom.enableBody = true;
-
-            for (var y = 0; y < 3; y++)
-            {
-                for (var x = 0; x < 14; x++)
-                {
-                    var brick;
-                    brick = bricks.create(100 + (x * 60), 100 + (y * 50), 'leicht', 'leicht.png');
-                    brick.scale.set(0.1);
-                    brick.body.bounce.set(1);
-                    brick.body.immovable = true;
-                }
-            }
-
-			var i = 0;
-            for (var y = 3; y < 5; y++)
-            {
-                for (var x = 0; x < 14; x++)
-                {
-                    var brick;
-                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
-                    brick.body.bounce.set(1);
-                    brick.body.immovable = true;
-					alreadyHittedBricks[i] = 0;
-                }
-            }
-
-        var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
-
+       
         //Hinzufügen von Score
         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -167,7 +130,8 @@ Break.Game.prototype = {
 	
 	ballHitStrongBrick: function(myBall, myBrick) { //Function which handles what should happen when a Strong Brick has been hitted
 
-	
+		var strongBrickSound = this.add.audio('HitStrongBrickSound');
+		var BrickSound = this.add.audio('HitBrickSound');
 		if(alreadyHittedBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
 			
 			alreadyHittedBricks[arrayIndex] = myBrick;
@@ -175,11 +139,13 @@ Break.Game.prototype = {
 			myBrick.loadTexture('Schwer3',0);
 			score = score +10;
 			scoreText.text = 'Score: ' + score;
+			strongBrickSound.play();
 		}
 		else{
 			score = score +10;
 			scoreText.text = 'Score: ' + score;
 			myBrick.kill();
+			BrickSound.play();
 		}
 			
        
@@ -187,6 +153,52 @@ Break.Game.prototype = {
 
     }, 	
 
+	LevelEins: function()
+	{
+		 //Hintergrund
+        land = this.add.tileSprite(0, 0, 1024, 768, 'mario1');
+		
+		var music = this.add.audio('SoundLevel1');
+		music.play();
+		 //Hinzufügen der Blöcke 
+        bricks = this.add.group();
+        bricks.enableBody = true;
+
+		
+		strongBricks = this.add.group();
+		strongBricks.enableBody = true;
+
+        bottom = this.add.group();
+        bottom.enableBody = true;
+
+            for (var y = 0; y < 3; y++)
+            {
+                for (var x = 0; x < 14; x++)
+                {
+                    var brick;
+                    brick = bricks.create(100 + (x * 60), 100 + (y * 50), 'leicht', 'leicht.png');
+                    brick.scale.set(0.1);
+                    brick.body.bounce.set(1);
+                    brick.body.immovable = true;
+                }
+            }
+
+			var i = 0;
+            for (var y = 3; y < 5; y++)
+            {
+                for (var x = 0; x < 14; x++)
+                {
+                    var brick;
+                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
+                    brick.body.bounce.set(1);
+                    brick.body.immovable = true;
+					alreadyHittedBricks[i] = 0;
+                }
+            }
+
+        var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
+
+	},
     ballHitBottom: function(myBall) {
 
         if(life > 0)
