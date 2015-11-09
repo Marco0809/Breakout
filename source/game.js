@@ -17,15 +17,14 @@ Break.Game.prototype = {
         //Variabeln
         ballreleased=false;
 
-<<<<<<< HEAD
+
        
 
 		this.LevelEins();
-=======
+
         //Hintergrund
         land = this.add.tileSprite(0, 0, 1024, 768, 'mario1');
-        
->>>>>>> da52a4526c5855a04473195ef489585ef505d751
+
 
         //Hinzufügen des Cursors
         cursor= this.add.sprite(this.world.centerX, 735, 'cursor');
@@ -37,10 +36,7 @@ Break.Game.prototype = {
 
         
         this.createBall();
-<<<<<<< HEAD
 
-       
-=======
         
         //Hinzufügen der Blöcke 
         bricks = this.add.group();
@@ -71,7 +67,8 @@ Break.Game.prototype = {
                 for (var x = 0; x < 14; x++)
                 {
                     var brick;
-                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
+                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Mittel1', 'StufeEins.png');
+                    brick.scale.set(0.1);
                     brick.body.bounce.set(1);
                     brick.body.immovable = true;
 					alreadyHittedBricks[i] = 0;
@@ -80,7 +77,7 @@ Break.Game.prototype = {
 
         var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
 
->>>>>>> da52a4526c5855a04473195ef489585ef505d751
+
         //Hinzufügen von Score
         scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
@@ -172,10 +169,11 @@ Break.Game.prototype = {
 
 
     ballHitBrick: function(myBall, myBrick) {
-
+        var BrickSound = this.add.audio('HitBrickSound');
         score = score +10;
         scoreText.text = 'Score: ' + score;
         myBrick.kill();
+        BrickSound.play();
 
 
     }, 
@@ -189,7 +187,7 @@ Break.Game.prototype = {
 			
 			alreadyHittedBricks[arrayIndex] = myBrick;
 			arrayIndex ++;
-			myBrick.loadTexture('Schwer3',0);
+			myBrick.loadTexture('Mittel2',0);
 			score = score +10;
 			scoreText.text = 'Score: ' + score;
 			strongBrickSound.play();
