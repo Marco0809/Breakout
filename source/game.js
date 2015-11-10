@@ -136,7 +136,7 @@ Break.Game.prototype = {
 			
 			alreadyHittedBricks[arrayIndex] = myBrick;
 			arrayIndex ++;
-			myBrick.loadTexture('Schwer3',0);
+			myBrick.loadTexture('mittel2',0);
 			score = score +10;
 			scoreText.text = 'Score: ' + score;
 			strongBrickSound.play();
@@ -189,7 +189,8 @@ Break.Game.prototype = {
                 for (var x = 0; x < 14; x++)
                 {
                     var brick;
-                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'Schwer1', 'StufeEins.png');
+                    brick = strongBricks.create(100 + (x * 60), 100 + (y * 50), 'mittel1', 'mittel1.png');
+                    brick.scale.set(0.1);
                     brick.body.bounce.set(1);
                     brick.body.immovable = true;
 					alreadyHittedBricks[i] = 0;
