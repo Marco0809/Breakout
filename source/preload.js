@@ -11,10 +11,16 @@ Break.Preloader.prototype = {
         
         //Bloecke
     this.load.image('leicht', 'images/bloecke/blockleicht/leicht.png');
-    this.load.image('Schwer1', 'images/bloecke/blockschwer/StufeEins.png');
-    this.load.image('Schwer2', 'images/bloecke/blockschwer/StufeZwei.png');
-    this.load.image('Schwer3', 'images/bloecke/blockschwer/StufeDrei.png');
-    this.load.image('Schwer4', 'images/bloecke/blockschwer/StufeVier.png');
+        
+    this.load.image('mittel1', 'images/bloecke/blockmittel/mittel1.png');
+    this.load.image('mittel2', 'images/bloecke/blockmittel/mittel2.png');
+        
+    this.load.image('schwer1', 'images/bloecke/blockschwer/schwer1.png');
+    this.load.image('schwer2', 'images/bloecke/blockschwer/schwer2.png');
+    this.load.image('schwer3', 'images/bloecke/blockschwer/schwer3.png');
+    this.load.image('schwer4', 'images/bloecke/blockschwer/schwer4.png');
+        
+    this.load.image('unmoeglich', 'images/bloecke/blockunmoeglich/unmoeglich.png');
     
         
         //Hintergruende
