@@ -1,0 +1,2 @@
+Warning: Truncated 3 line(s) in file (D:\Development\1_Breakout\source\phaser.js)
+Warning: Truncated 4 line(s) in file (D:\Development\1_Breakout\source\phaser.min.js)
