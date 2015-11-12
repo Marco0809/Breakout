@@ -8,6 +8,7 @@ Break.Preloader.prototype = {
         
     this.load.image('cursor', 'images/cursor.png');
     this.load.image('ball', 'images/ball.png');
+        this.load.image('bowser', 'images/bowser.png');
         
         //Bloecke
     this.load.image('leicht', 'images/bloecke/blockleicht/leicht.png');
@@ -24,8 +25,11 @@ Break.Preloader.prototype = {
     
         
         //Hintergruende
-    this.load.image('mario1','images/hintergruende/hintergrund.png');
-    this.load.image('mario0','images/hintergruende/startbackground.png');
+    this.load.image('hintergrund1','images/hintergruende/hintergrund.png');
+        this.load.image('hintergrund2','images/hintergruende/hintergrund2.png');
+    this.load.image('hintergrund3','images/hintergruende/hintergrund3.png');
+    this.load.image('hintergrund0','images/hintergruende/startbackground.png');
+        
     this.load.image('startlabel','images/labels/startlabel.png'); 
     this.load.image('soundlabel','images/labels/soundlabel.png');
         

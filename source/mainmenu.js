@@ -21,7 +21,7 @@ Break.MainMenu.prototype = {
         //Activate Keyboard
         cursors = this.input.keyboard.createCursorKeys();
 
-        background = this.add.tileSprite(0, 0, 1024, 768, 'mario0');
+        background = this.add.tileSprite(0, 0, 1024, 768, 'hintergrund0');
 
         //Mario
         //supermario = this.add.sprite(190, 635, 'supermario');
@@ -216,7 +216,8 @@ Break.MainMenu.prototype = {
                         playercount=1;
                         break;
                     case 2:
-                        this.startLevel1();
+                        currentlevel=1
+                        this.game.state.start('Game');
                         startstate=0;
                         break;
 
@@ -316,7 +317,8 @@ Break.MainMenu.prototype = {
             }
             
             if(startstate==2){
-               //Start Level2 
+               currentlevel=2;
+               this.game.state.start('Game');
             }
             
             
@@ -358,6 +360,12 @@ Break.MainMenu.prototype = {
                 soundstate=0;
                 this.showMainMenu();
                 
+                
+            }
+            
+            if(startstate==2){
+                currentlevel=3;
+               this.game.state.start('Game');
                 
             }
             
