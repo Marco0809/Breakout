@@ -7,6 +7,7 @@ Break.Preloader.prototype = {
         
         
     this.load.image('cursor', 'images/cursor.png');
+        this.load.image('cursor2', 'images/cursor2.png');
     this.load.image('ball', 'images/ball.png');
         this.load.image('bowser', 'images/bowser.png');
         this.load.spritesheet('bowseranim','images/bowseranim.png',655,374,3);

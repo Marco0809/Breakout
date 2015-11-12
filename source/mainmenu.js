@@ -336,17 +336,17 @@ Break.MainMenu.prototype = {
                 
             }
             
-            
+            if(startstate==2){
+               currentlevel=2;
+               this.game.state.start('Game');
+            }
                        
             if(startstate==1){
                 this.showLevelMenu();
                 playercount=2;
             }
             
-            if(startstate==2){
-               currentlevel=2;
-               this.game.state.start('Game');
-            }
+            
             
             
             

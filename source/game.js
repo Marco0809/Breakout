@@ -2,6 +2,7 @@ Break.Game =function(game) {
    
 };
     var cursor;
+    var cursor2;
     var ball;
     var ballreleased;
     var score = 0;
@@ -33,12 +34,12 @@ Break.Game.prototype = {
         }
 
         //Hinzufügen des Cursors
-        cursor= this.add.sprite(this.world.centerX, 715, 'cursor');
-        cursor.anchor.setTo(0.5, 0.5);
-        this.physics.arcade.enable(cursor);
-        cursor.body.immovable = true;
-        cursor.body.collideWorldBounds = true;
-        cursor.body.bounce.set(1);
+        
+        this.createCursor1();
+        if(playercount==2){
+            this.createCursor2();
+        }
+        
 
         this.createBall();
 
@@ -60,24 +61,28 @@ Break.Game.prototype = {
 
     update: function() {
         
-        //Linker Mausklick
+        //Falls Ball nicht released ist
         if(!ballreleased)
         {
-        if ((this.input.activePointer.leftButton.isDown) || (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) )
-        {
-            ball.body.allowGravity = true;
-            ballreleased = true;
-            ball.body.immovable = false;
-            if(difficulty==1){
-            ball.body.velocity.y=-450;}
-            else{
-              ball.body.velocity.y=-900;  
+            
+            //Spiel Starten / linker Mausklick
+            if ((this.input.activePointer.leftButton.isDown) || (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) )
+            {
+                ball.body.allowGravity = true;
+                ballreleased = true;
+                ball.body.immovable = false;
+                if(difficulty==1){
+                ball.body.velocity.y=-450;}
+                else{
+                  ball.body.velocity.y=-900;  
+                }
             }
-        }
-        else {}
+            else {}
         }
 
-
+        
+        
+        //////SPIELER 1
         if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
 
@@ -95,36 +100,52 @@ Break.Game.prototype = {
             ball.x = cursor.x ;}
 
         }
+        
+         //////SPIELER 2
+        if (this.input.keyboard.isDown(Phaser.Keyboard.A))
+        {
+
+            cursor2.x -= 20;
+
+        }
+        else if (this.input.keyboard.isDown(Phaser.Keyboard.D))
+        {
+
+
+            cursor2.x += 20;
+
+        }
 
 
         if(ball.body.onFloor() || ball.body.touching.down)
         {
             this.ballHitBottom(ball);
         }
-        
-        if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1)
-		{
-			
-			// Call next Level 
-			switch(currentLevel)
-			{
-				case 1: LevelZwei();
-					break;
-					
-				case 2: LevelDrei();
-					break;
-					
-				case 3: //You won, Return to main Menu 
-					break;
-			}
 
-		}
+        if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1)
+        {
+
+            // Call next Level 
+            switch(currentLevel)
+            {
+                case 1: LevelZwei();
+                    break;
+
+                case 2: LevelDrei();
+                    break;
+
+                case 3: //You won, Return to main Menu 
+                    break;
+            }
+
+          }
 
         this.physics.arcade.collide(ball, bricks, this.ballHitBrick, null, this);
         this.physics.arcade.collide(ball, middleBricks, this.ballHitMiddleBrick, null, this);
 		this.physics.arcade.collide(ball, strongBricks, this.ballHitStrongBrick, null, this);
         
         this.physics.arcade.collide(ball, impossibleBricks);
+        this.physics.arcade.collide(ball, cursor2, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, cursor, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, bowser);
         
@@ -336,6 +357,30 @@ Break.Game.prototype = {
         ball.body.immovable = true;
         ball.body.allowGravity = false;
         ball.body.gravity.y = 50;
+    },
+    
+    createCursor1: function()
+    {
+        
+        cursor= this.add.sprite(this.world.centerX, 715, 'cursor');
+        cursor.anchor.setTo(0.5, 0.5);
+        this.physics.arcade.enable(cursor);
+        cursor.body.immovable = true;
+        cursor.body.collideWorldBounds = true;
+        cursor.body.bounce.set(1);  
+        
+    },
+    
+    createCursor2: function()
+    {
+        
+        cursor2= this.add.sprite(this.world.centerX+250, 715, 'cursor2');
+        cursor2.anchor.setTo(0.5, 0.5);
+        this.physics.arcade.enable(cursor2);
+        cursor2.body.immovable = true;
+        cursor2.body.collideWorldBounds = true;
+        cursor2.body.bounce.set(1);  
+        
     },
     
     createBowser: function()
