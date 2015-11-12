@@ -14,6 +14,7 @@ Break.MainMenu = function (game) {
     var musicon = true;
     var difficulty = 1;
     var playercount;
+    var eggtrigger=false;
     
 Break.MainMenu.prototype = {
     create: function () {
@@ -105,6 +106,23 @@ Break.MainMenu.prototype = {
         button5.body.enable=false;
         button5.visible=false;
         
+        //Eastereggpipe
+        
+        pipe = this.add.sprite(430, 0, 'pipe');
+        pipe.scale.set(0.13);
+        this.physics.arcade.enable(pipe);
+        pipe.body.immovable = true;
+        pipe.visible=false;
+        
+        helfer = this.add.sprite(470, 0, 'helfer');
+        this.physics.arcade.enable(helfer);
+        helfer.body.immovable = true;
+        helfer.visible=false;
+        helfer.body.immovable = true;
+        
+        
+        
+        //Building Labels
         this.buildLabels();
         
     },
@@ -119,58 +137,67 @@ Break.MainMenu.prototype = {
         this.physics.arcade.collide(supermario, button3, this.marioHitButton3, null, this);
         this.physics.arcade.collide(supermario, button4, this.marioHitButton4, null, this);
         this.physics.arcade.collide(supermario, button5, this.marioHitButton5, null, this);
+        if(startstate==0 && soundstate==0){
+        this.physics.arcade.collide(supermario, pipe, this.marioHitPipe, null, this);
+        this.physics.arcade.collide(supermario, helfer, this.marioHitHelfer, null, this);
+        }
          
-            
-         if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        {
-                
-            supermario.x -= 12;
-            if (this.input.keyboard.isDown(Phaser.Keyboard.UP))
-            {supermario.animations.play('jumpleft');
-            }
-            else{
-            
-        supermario.animations.play('left');}
+        if(!eggtrigger){
+             if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+            {
 
+                supermario.x -= 12;
+                if (this.input.keyboard.isDown(Phaser.Keyboard.UP))
+                {supermario.animations.play('jumpleft');
+                }
+                else{
+
+            supermario.animations.play('left');}
+
+            }
+            else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+            {
+
+
+                supermario.x += 12;
+
+                if (this.input.keyboard.isDown(Phaser.Keyboard.UP))
+                {supermario.animations.play('jumpright');
+                }
+                else{
+
+            supermario.animations.play('right');}
+
+            }
+
+             else if (this.input.keyboard.isDown(Phaser.Keyboard.UP))
+            {
+
+                if (    (!(this.input.keyboard.isDown(Phaser.Keyboard.RIGHT)))&& (!(this.input.keyboard.isDown(Phaser.Keyboard.LEFT)))            )
+                {supermario.animations.play('jump');
+                }
+
+
+            }   
+
+            else
+            {
+            //  Do nothing
+            supermario.animations.stop();
+
+            supermario.frame = 0;
+            }
+
+            //  Jump only if Mario is already touching the ground
+            if (cursors.up.isDown && supermario.body.touching.down)
+            {
+                supermario.body.velocity.y = -2150;
+            }
         }
-        else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        {
-
-
-            supermario.x += 12;
-            
-            if (this.input.keyboard.isDown(Phaser.Keyboard.UP))
-            {supermario.animations.play('jumpright');
-            }
-            else{
-            
-        supermario.animations.play('right');}
-
-        }
-       
-         else if (this.input.keyboard.isDown(Phaser.Keyboard.UP))
-        {
-
-            if (    (!(this.input.keyboard.isDown(Phaser.Keyboard.LEFT)))&& (!(this.input.keyboard.isDown(Phaser.Keyboard.LEFT)))            )
-            {supermario.animations.play('jump');
-            }
-       
-
-        }   
         
-        else
-        {
-        //  Do nothing
-        supermario.animations.stop();
-
-        supermario.frame = 0;
-        }
-
-        //  Jump only if Mario is already touching the ground
-        if (cursors.up.isDown && supermario.body.touching.down)
-        {
-            supermario.body.velocity.y = -2150;
-        }
+        if(supermario.body.y==-50){
+            this.game.state.start('Game');
+            }
 	
 	},
 	
@@ -399,6 +426,37 @@ Break.MainMenu.prototype = {
     marioHitButton5: function() {
         if(supermario.body.touching.up){
             this.showPlayerMenu();
+            
+        }
+        
+        
+    },
+    
+    marioHitPipe: function() {
+        if(supermario.body.touching.up){
+            eggtrigger=true;
+            pipe.visible=true;
+            pipe.body.enable=false;
+            supermario.animations.play('jump')
+            supermario.x = 500;
+            supermario.body.gravity.set(0, 0);
+            supermario.body.collideWorldBounds = true;
+            supermario.checkWorldBounds = true;
+            //supermario.body.bounce.set(0.21);
+            supermario.body.velocity.y =-100;
+           // this.game.state.start('EasterEgg');
+            
+            
+        }
+        
+        
+    },
+    
+    marioHitHelfer: function() {
+        if(supermario.body.touching.up){
+             helfer.body.enable=true;
+             this.game.state.start('EasterEgg');
+            
             
         }
         

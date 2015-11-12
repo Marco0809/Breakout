@@ -9,6 +9,8 @@ Break.Preloader.prototype = {
     this.load.image('cursor', 'images/cursor.png');
     this.load.image('ball', 'images/ball.png');
         this.load.image('bowser', 'images/bowser.png');
+        this.load.spritesheet('bowseranim','images/bowseranim.png',655,374,3);
+        
         
         //Bloecke
     this.load.image('leicht', 'images/bloecke/blockleicht/leicht.png');
@@ -60,12 +62,16 @@ Break.Preloader.prototype = {
     this.load.image('test1','images/test1.png');  
     this.load.image('test2','images/test2.png');
     this.load.image('menuebutton','images/startbutton1.png');
+    this.load.image('pipe','images/pipe.png');
+    this.load.image('helfer','images/helfer.png');    
+    
 
 	
 	// Musik
 	this.load.audio('SoundLevel1', 'sounds/SoundLevel1.mp3');
 	this.load.audio('HitBrickSound', 'sounds/HitBrickSound.mp3');
 	this.load.audio('HitStrongBrickSound', 'sounds/HitStrongBrickSound.wav');
+    this.load.audio('BowserLaugh', 'sounds/Bowser_Laugh.mp3');
 
 
 

@@ -1,7 +1,7 @@
 Break.Game =function(game) {
    
 };
- var cursor;
+    var cursor;
     var ball;
     var ballreleased;
     var score = 0;
