@@ -15,6 +15,7 @@ Break.MainMenu = function (game) {
     var difficulty = 1;
     var playercount;
     var eggtrigger=false;
+    var currentLevel=1;
     
 Break.MainMenu.prototype = {
     create: function () {

@@ -14,8 +14,8 @@ Break.Game =function(game) {
 	var arrayIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var arrayStrongIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var hitcount=2;
-    var currentLevel=1;
     var bowser;
+    var counterHitStrong =[];
 
 Break.Game.prototype = {
     create: function() {
@@ -102,32 +102,34 @@ Break.Game.prototype = {
 
         }
         
+        if(playercount==2) {
          //////SPIELER 2
-        if (this.input.keyboard.isDown(Phaser.Keyboard.A))
-        {
+            if (this.input.keyboard.isDown(Phaser.Keyboard.A))
+            {
 
-            cursor2.x -= 20;
+                cursor2.x -= 20;
+
+            }
+            else if (this.input.keyboard.isDown(Phaser.Keyboard.D))
+            {
+
+
+                cursor2.x += 20;
+
+            }
+
 
         }
-        else if (this.input.keyboard.isDown(Phaser.Keyboard.D))
-        {
-
-
-            cursor2.x += 20;
-
-        }
-
-
+        
         if(ball.body.onFloor() || ball.body.touching.down)
         {
             this.ballHitBottom(ball);
         }
 
-         this.add.text(500, 500,bricks.hash.length  , { fontSize: '32px', fill: '#000'});
+       
         if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1)
         {
-            alert(middleBricks.hash.length);// +" "+bricks.hash.length+" "middleBricks.hash.length);
-
+           
             // Call next Level 
             switch(currentLevel)
             {
@@ -204,15 +206,14 @@ Break.Game.prototype = {
 			alreadyHittedBricks[arrayIndex] = myBrick;
 			arrayIndex ++;
 			myBrick.loadTexture('mittel2',0);
-			score = score +10;
-			scoreText.text = 'Score: ' + score;
+			
             if(soundon){
 			middleBrickSound.play();
             }
 		}
         
 		else{
-			score = score +10;
+			score = score +30;
 			scoreText.text = 'Score: ' + score;
             middleBricks.removeFromHash(myBrick);
 			myBrick.kill();
@@ -245,24 +246,47 @@ Break.Game.prototype = {
                         break;
 
                 }*/
-		if(alreadyHittedBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
+		if(alreadyHittedStrongBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
 			
-			alreadyHittedBricks[arrayIndex] = myBrick;
-			arrayIndex ++;
+			alreadyHittedStrongBricks[arrayStrongIndex] = myBrick;
+            counterHitStrong[arrayStrongIndex] = 1;
+			arrayStrongIndex ++;
 			myBrick.loadTexture('schwer2',0);
-			score = score +10;
-			scoreText.text = 'Score: ' + score;
             if(soundon){
 			strongBrickSound.play();
             }
 		}
-		else{
-			score = score +10;
-			scoreText.text = 'Score: ' + score;
-            strongBricks.removeFromHash(myBrick);
-			myBrick.kill();
-            if(soundon){
-			BrickSound.play();
+		else{      
+               switch(counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)])
+                {
+                
+                    case 1: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
+                        	myBrick.loadTexture('schwer3',0);
+                            if(soundon){
+                                    strongBrickSound.play();
+                            }
+                            break;
+                        
+                          case 2: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
+                        	myBrick.loadTexture('schwer4',0);
+                            if(soundon){
+                                    strongBrickSound.play();
+                            }
+                            break;
+                        
+                          case 3: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
+                        	
+                            score = score +100;
+                            scoreText.text = 'Score: ' + score;
+                            strongBricks.removeFromHash(myBrick);
+                            myBrick.kill();
+                            if(soundon){
+                            BrickSound.play();
+                            break;
+                        
+                    
+                 }
+               
             }
             hitcount++;
 		}
