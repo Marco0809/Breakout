@@ -243,7 +243,7 @@ Break.MainMenu.prototype = {
                         playercount=1;
                         break;
                     case 2:
-                        currentlevel=1
+                        currentLevel=1
                         this.game.state.start('Game');
                         startstate=0;
                         break;
@@ -337,7 +337,7 @@ Break.MainMenu.prototype = {
             }
             
             if(startstate==2){
-               currentlevel=2;
+               currentLevel=2;
                this.game.state.start('Game');
             }
                        
@@ -391,7 +391,7 @@ Break.MainMenu.prototype = {
             }
             
             if(startstate==2){
-                currentlevel=3;
+                currentLevel=3;
                this.game.state.start('Game');
                 
             }
@@ -444,7 +444,6 @@ Break.MainMenu.prototype = {
             supermario.checkWorldBounds = true;
             //supermario.body.bounce.set(0.21);
             supermario.body.velocity.y =-100;
-           // this.game.state.start('EasterEgg');
             
             
         }

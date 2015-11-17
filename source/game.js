@@ -14,17 +14,18 @@ Break.Game =function(game) {
 	var arrayIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var arrayStrongIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var hitcount=2;
-    var currentlevel=1;
+    var currentLevel=1;
     var bowser;
 
 Break.Game.prototype = {
     create: function() {
+        
 
         //Variabeln
         ballreleased=false;
 
        
-        switch(currentlevel){
+        switch(currentLevel){
             case 1: LevelEins(this);
                 break;
                 case 2: LevelZwei(this);
@@ -122,16 +123,20 @@ Break.Game.prototype = {
             this.ballHitBottom(ball);
         }
 
+         this.add.text(500, 500,bricks.hash.length  , { fontSize: '32px', fill: '#000'});
         if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1)
         {
+            alert(middleBricks.hash.length);// +" "+bricks.hash.length+" "middleBricks.hash.length);
 
             // Call next Level 
             switch(currentLevel)
             {
-                case 1: LevelZwei();
+                case 1:currentLevel=2;
+                    this.game.state.start('Game');
                     break;
 
-                case 2: LevelDrei();
+                case 2: currentLevel=3;
+                    this.game.state.start('Game');
                     break;
 
                 case 3: //You won, Return to main Menu 
@@ -182,6 +187,7 @@ Break.Game.prototype = {
 
         score = score +10;
         scoreText.text = 'Score: ' + score;
+        bricks.removeFromHash(myBrick);
         myBrick.kill();
             hitcount++;
 
@@ -208,13 +214,12 @@ Break.Game.prototype = {
 		else{
 			score = score +10;
 			scoreText.text = 'Score: ' + score;
+            middleBricks.removeFromHash(myBrick);
 			myBrick.kill();
 			BrickSound.play();
             hitcount++;
 		}
 			
-       if(currentlevel==3 && hitcount==5){
-           this.createBowser();}
 
 
     }, 	
@@ -254,6 +259,7 @@ Break.Game.prototype = {
 		else{
 			score = score +10;
 			scoreText.text = 'Score: ' + score;
+            strongBricks.removeFromHash(myBrick);
 			myBrick.kill();
             if(soundon){
 			BrickSound.play();
@@ -262,60 +268,11 @@ Break.Game.prototype = {
 		}
 			
        
-        if(currentlevel==3 && hitcount==5){
-           this.createBowser();}
 
     }, 	
 
 
-	LevelEins: function()
-	{
-		 //Hintergrund
-        land = this.add.tileSprite(0, 0, 1024, 768, 'mario1');
-		
-		var music = this.add.audio('SoundLevel1');
-		music.play();
-		 //Hinzufügen der Blöcke 
-        bricks = this.add.group();
-        bricks.enableBody = true;
-
-		
-		middleBricks = this.add.group();
-		middleBricks.enableBody = true;
-
-        bottom = this.add.group();
-        bottom.enableBody = true;
-
-            for (var y = 0; y < 3; y++)
-            {
-                for (var x = 0; x < 14; x++)
-                {
-                    var brick;
-                    brick = bricks.create(100 + (x * 60), 100 + (y * 50), 'leicht', 'leicht.png');
-                    brick.scale.set(0.08);
-                    brick.body.bounce.set(1);
-                    brick.body.immovable = true;
-                }
-            }
-
-			var i = 0;
-            for (var y = 3; y < 5; y++)
-            {
-                for (var x = 0; x < 14; x++)
-                {
-                    var brick;
-                    brick = middleBricks.create(100 + (x * 60), 100 + (y * 50), 'mittel1', 'mittel1.png');
-                    brick.scale.set(0.08);
-                    brick.body.bounce.set(1);
-                    brick.body.immovable = true;
-					alreadyHittedBricks[i] = 0;
-                }
-            }
-
-        var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
-
-	},
-    
+	
     
     
     
