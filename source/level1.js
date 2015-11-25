@@ -38,7 +38,7 @@ function LevelEins (game)
                     brick.body.immovable = true;
                 }
             }
-
+/*
 			var i = 0;
             for (var y = 3; y < 5; y++)
             {
@@ -52,7 +52,7 @@ function LevelEins (game)
 					alreadyHittedBricks[i] = 0;
                 }
             }
-
+*/
         var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
 
 	}

@@ -5,17 +5,32 @@ Break.Game =function(game) {
     var cursor2;
     var ball;
     var ballreleased;
-    var score = 0;
+    var powerup=[];
+    var indexPowerArray = 0;
+    var lifepowerup=[];
+    var indexLifepowerArray = 0;
     var scoreText;
-    var life = 3;
     var lifeText;
 	var alreadyHittedStrongBricks = [];
     var alreadyHittedBricks = [];
 	var arrayIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var arrayStrongIndex = 0; // the current index of the alreadyHittedBricks array will be save here
-    var hitcount=2;
     var bowser;
     var counterHitStrong =[];
+    var heartcounter=[];
+    var powerupsalife=0;
+    var lifepowerupsalife=0;
+    var gameover=false;
+    var cursorspeed=20;
+    var timeCheckFlake;
+    var timeCheckInfinity
+   
+var scoreText1;
+var scoreText2;
+    
+   
+
+    
 
 Break.Game.prototype = {
     create: function() {
@@ -23,8 +38,9 @@ Break.Game.prototype = {
 
         //Variabeln
         ballreleased=false;
+        gameover=false;
+        
 
-       
         switch(currentLevel){
             case 1: LevelEins(this);
                 break;
@@ -33,61 +49,77 @@ Break.Game.prototype = {
                 case 3: LevelDrei(this);
                 break;
         }
+       
+        
 
         //Hinzufügen des Cursors
         
-        this.createCursor1();
+        this.createCursor1('cursor',520, 720);
         if(playercount==2){
             this.createCursor2();
         }
         
-
+        //Hinzufügen des BAlls
         this.createBall();
-
+       
        
         //Hinzufügen von Score
-        scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+        scoreText = this.add.text(920, 16, score, { fontSize: '32px', fill: '#000', align: 'right' });
+        if(currentLevel==3 ||currentLevel==2){scoreText.fill= '#FFF';}
 
         //Hinzufügen von Leben
+       this.createHearts();
         
-        lifeText = this.add.text(900, 16, 'lifes: 3', { fontSize: '32px', fill: '#000'});
+        
+        featurebricks = this.game.add.group();
+        featurebricks.enableBody = true;
+		featurebricks.exists = true;
+        
+        eggbricks = this.game.add.group();
+        eggbricks.enableBody = true;
+		eggbricks.exists = true;
 
         //Maus aktivieren
         this.input.mouse.capture = true;
-
+        
+        
 
        
     },
 
 
     update: function() {
-        
+       
         //Falls Ball nicht released ist
-        if(!ballreleased)
-        {
+        
             
             //Spiel Starten / linker Mausklick
             if ((this.input.activePointer.leftButton.isDown) || (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) )
             {
-                ball.body.allowGravity = true;
-                ballreleased = true;
-                ball.body.immovable = false;
-                if(difficulty==1){
-                ball.body.velocity.y=-450;}
-                else{
-                  ball.body.velocity.y=-900;  
+                if(!gameover && !ballreleased){
+                    ball.body.allowGravity = true;
+                    ballreleased = true;
+                    ball.body.immovable = false;
+                    if(difficulty==1){
+                    ball.body.velocity.y=-450;}
+                    else{
+                      ball.body.velocity.y=-900;  
+                    }
+                }
+                else if(gameover && ballreleased){
+                    this.state.start('MainMenu');
                 }
             }
-            else {}
-        }
+        
 
         
         
         //////SPIELER 1
         if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
         {
-
-            cursor.x -= 20;
+            // Cursor ändert Position bei Tastaturklick
+            cursor.x -= cursorspeed;
+            //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
             if(!ballreleased){ 
             ball.x = cursor.x ;}
 
@@ -95,39 +127,42 @@ Break.Game.prototype = {
         else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
         {
 
-
-            cursor.x += 20;
+             // Cursor ändert Position bei Tastaturklick
+            cursor.x += cursorspeed;
             if(!ballreleased){ 
+            //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
             ball.x = cursor.x ;}
 
         }
         
+        //Falls es 2. Spieler gibt
         if(playercount==2) {
          //////SPIELER 2
             if (this.input.keyboard.isDown(Phaser.Keyboard.A))
             {
 
-                cursor2.x -= 20;
+                cursor2.x -= cursorspeed;
 
             }
             else if (this.input.keyboard.isDown(Phaser.Keyboard.D))
             {
 
 
-                cursor2.x += 20;
+                cursor2.x += cursorspeed;
 
             }
 
 
         }
         
+        //Wenn der Ball den Boden berührt, führe ballHitBottom(ball)  aus
         if(ball.body.onFloor() || ball.body.touching.down)
         {
             this.ballHitBottom(ball);
         }
 
-       
-        if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1)
+        // Wenn es keine Bricks mehr gibt -> nächstes Level
+        if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1 && featurebricks.hash.length<1 && eggbricks.hash.length<1)
         {
            
             // Call next Level 
@@ -146,19 +181,69 @@ Break.Game.prototype = {
             }
 
           }
+        
+         if ((5990<= (this.game.time.now - timeCheckFlake)) && ((this.game.time.now - timeCheckFlake) <= 6000)){
+             
+             
+             this.timesUpFlake();
+          
+           
+        }
+        
+        if ((2990<= (this.game.time.now - timeCheckInfinity)) && ((this.game.time.now - timeCheckInfinity) <= 3000)){
+             
+             
+             this.timesUpInfinity();
+          
+           
+        }
+        
+        if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP))
+    {
+        this.game.physics.arcade.velocityFromAngle(ball.angle+90, 100, ball.body.velocity);
+    }
 
         this.physics.arcade.collide(ball, bricks, this.ballHitBrick, null, this);
         this.physics.arcade.collide(ball, middleBricks, this.ballHitMiddleBrick, null, this);
 		this.physics.arcade.collide(ball, strongBricks, this.ballHitStrongBrick, null, this);
-        
         this.physics.arcade.collide(ball, impossibleBricks);
+        this.physics.arcade.collide(ball, featurebricks, this.ballHitFeatureBlock, null, this);
+        this.physics.arcade.collide(ball, eggbricks, this.ballHitEggBlock, null, this);
         this.physics.arcade.collide(ball, cursor2, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, cursor, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, bowser);
+        for(var i=0; i<=powerupsalife; i++){
+        this.physics.arcade.collide(powerup[indexPowerArray-i], cursor, this.powerupHitCursor, null, this);
+        }
+        
+        for(var k=0; k<=lifepowerupsalife; k++){
+        this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);
+        }
+        
         
         
     },
+    
+    render: function(){
+    this.game.debug.spriteInfo(ball, 32, 32);
+},
 
+    
+    timesUpInfinity: function()
+    {
+        
+            var tempX = cursor.x;
+            var tempY = cursor.y;
+            cursor.kill();
+            this.createCursor1('cursor', tempX, tempY);
+    },
+    
+    timesUpFlake: function()
+    {
+        
+            ball.body.angularvelocity=-450;
+            cursorspeed=20;
+    },
 
     ballHitCursor: function(myBall, myCursor) {
 
@@ -184,15 +269,129 @@ Break.Game.prototype = {
 
     },
 
+    powerupHitCursor:function(myPowerup, myCursor){
+        
+        
+        myPowerup.kill();
+        
+        
+       
+        switch(myPowerup.frameName){
+            case 'images/infinity.png': 
+                var tempX = cursor.x;
+                var tempY = cursor.y;
+                cursor.kill();
+                this.createCursor1('maxcursor', tempX, tempY);
+                
+                timeCheckInfinity = this.game.time.now;
+                powerupsalife--;
+        
+                break;
+            case 'images/snowflake.png': 
+                 ball.body.angularvelocity=-150;
+                cursorspeed=10;
+                timeCheckFlake = this.game.time.now;
+                powerupsalife--;
+        
+                break;
+            case 'images/leben.png': life++;
+                 lifepowerupsalife--;               
+                this.createHearts();
+                break;
+        }
+      
+    },
+    
+     createFeatureBlock: function(brickX, brickY)
+    {
+        var rndd = this.game.rnd.integerInRange(1, 1);
+        if(rndd==1){
+                    var featurebrick;
+                    var eggbrick;
+                    var rnd = this.game.rnd.integerInRange(1, 2);
+                    if(rnd==1){
+                        featurebrick = featurebricks.create(brickX, brickY, 'featureblock', 'featureblock.png');
+                        featurebrick.scale.set(0.1);
+                        featurebrick.body.bounce.set(1);
+                        featurebrick.body.immovable = true;
+                    }
+                    else if(rnd==2){
+                        eggbrick = eggbricks.create(brickX, brickY, 'eiblock', 'eiblock.png');
+                        eggbrick.scale.set(0.1);
+                        eggbrick.body.bounce.set(1);
+                        eggbrick.body.immovable = true;
+                    }
+                    
+                    
+        }
+    },
+    
+     createPowerup: function(brickX, brickY)
+    {
+    
 
-        ballHitBrick: function(myBall, myBrick) {
+        var rnd = this.game.rnd.integerInRange(1, 2);
+        switch(rnd){
+            case 1: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'infinity');
+                    powerup[indexPowerArray].scale.setTo(0.1);
+                    this.physics.arcade.enable(powerup[indexPowerArray]);
+                    powerup[indexPowerArray].body.velocity.y= 450;
+                    powerupsalife++;
+                    indexPowerArray++;  
+                    break;
+                
+            case 2: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'snowflake');
+                    powerup[indexPowerArray].scale.setTo(0.05);
+                    this.physics.arcade.enable(powerup[indexPowerArray]);
+                    powerup[indexPowerArray].body.velocity.y= 450;
+                    powerupsalife++;
+                    indexPowerArray++;  
+                    break;
+            
+        }
+        
+        
+                
+        
+        
+    },
+    
+    createEgglife: function(brickX, brickY)
+    {
+    
+                    lifepowerup[indexLifepowerArray]= this.add.sprite(brickX, brickY, 'leben');
+                    lifepowerup[indexLifepowerArray].scale.setTo(0.05);
+                    this.physics.arcade.enable(lifepowerup[indexLifepowerArray]);
+                    lifepowerup[indexLifepowerArray].body.velocity.y= 450;
+                    lifepowerupsalife++;
+                    indexLifepowerArray++;
+                    
+        
+    },
+    
+    ballHitFeatureBlock: function(myBall, myFBrick) {
+        featurebricks.removeFromHash(myFBrick);
+        myFBrick.kill();
+        this.createPowerup( myFBrick.x, myFBrick.y);
+    },
+    
+    ballHitEggBlock: function(myBall, myEBrick) {
+        eggbricks.removeFromHash(myEBrick);
+        myEBrick.kill();
+        this.createEgglife( myEBrick.x, myEBrick.y);
+    },
+        
+    ballHitBrick: function(myBall, myBrick) {
 
         score = score +10;
-        scoreText.text = 'Score: ' + score;
+        scoreText.text = score;
         bricks.removeFromHash(myBrick);
         myBrick.kill();
-            hitcount++;
-
+        
+        
+        this.createFeatureBlock( myBrick.x, myBrick.y);
+        
+            
 
     }, 
 
@@ -214,11 +413,14 @@ Break.Game.prototype = {
         
 		else{
 			score = score +30;
-			scoreText.text = 'Score: ' + score;
+			scoreText.text = score;
             middleBricks.removeFromHash(myBrick);
 			myBrick.kill();
 			BrickSound.play();
-            hitcount++;
+            
+            
+            this.createFeatureBlock( myBrick.x, myBrick.y);
+            
 		}
 			
 
@@ -230,27 +432,12 @@ Break.Game.prototype = {
 
 		var strongBrickSound = this.add.audio('HitStrongBrickSound');
 		var BrickSound = this.add.audio('HitBrickSound');
-        /*
-        
-        switch(alreadyHittedBricks.indexOf(myBrick)) {
-                    case 0:
-                        this.showPlayerMenu();
-                        break;
-                    case 1:
-                        this.showLevelMenu();
-                        playercount=1;
-                        break;
-                    case 2:
-                        this.startLevel1();
-                        startstate=0;
-                        break;
-
-                }*/
+       
 		if(alreadyHittedStrongBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
 			
 			alreadyHittedStrongBricks[arrayStrongIndex] = myBrick;
             counterHitStrong[arrayStrongIndex] = 1;
-			arrayStrongIndex ++;
+			arrayStrongIndex ++;  
 			myBrick.loadTexture('schwer2',0);
             if(soundon){
 			strongBrickSound.play();
@@ -277,18 +464,21 @@ Break.Game.prototype = {
                           case 3: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
                         	
                             score = score +100;
-                            scoreText.text = 'Score: ' + score;
+                            scoreText.text = score;
                             strongBricks.removeFromHash(myBrick);
                             myBrick.kill();
                             if(soundon){
                             BrickSound.play();
+                           
+                            
+                            this.createFeatureBlock( myBrick.x, myBrick.y);
                             break;
                         
                     
                  }
                
             }
-            hitcount++;
+            
 		}
 			
        
@@ -303,53 +493,84 @@ Break.Game.prototype = {
     
     
     
-    ballHitBottom: function(myBall) {
+    ballHitBottom: function(myBall, leben) {
 
         if(life > 0)
         {
 
 	
             life--;
-            lifeText.text = 'lifes: ' + life;
+            heartdraw--;
             myBall.kill();
             ballreleased = false;
             this.createBall();
+            heartcounter[life].kill();
+            
+           
+        
         }
         else
         {
-            this.add.text(500, 500, 'YOU SUCK!!!', { fontSize: '32px', fill: '#000'});
-            this.game.paused = true;
+            var gameoverlabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'gameover');
+            gameoverlabel.anchor.set(0.5);
+            gameoverlabel.scale.setTo(0.7);
+            gameoverlabel.alpha = 0;
+            this.add.tween(gameoverlabel).to( { alpha: 1}, 50000, Phaser.Easing.Linear.None, true, 0, 0, true);
+            
+            var spacelabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY+90, 'pressspace');
+            spacelabel.anchor.set(0.5);
+            spacelabel.scale.setTo(0.4);
+            spacelabel.alpha = 0;
+            this.add.tween(spacelabel).to( { alpha: 1 }, 10000, Phaser.Easing.Linear.None, true, 2000, 0, true);
+            
+            ball.kill();
+            gameover=true;
+            life=3;
             
         }
     },
 
     createBall: function()
-    {
+        {
         //Hinzufügen des Balls
         ball = this.add.sprite(cursor.x, cursor.y-32, 'ball');
         ball.anchor.set(0.5);
         ball.scale.setTo(0.025);
 
         this.physics.arcade.enable(ball);
-
+        ball.body.angularVelocity = 0;
         ball.body.collideWorldBounds = true;
         ball.checkWorldBounds = true;
         ball.body.bounce.set(1);
         ball.body.immovable = true;
         ball.body.allowGravity = false;
         ball.body.gravity.y = 50;
+        ball.body.angle.enable =true;
+            ball.body.allowRotation=true;
     },
     
-    createCursor1: function()
+    createCursor1: function(cursorFrame, x, y)
     {
         
-        cursor= this.add.sprite(this.world.centerX, 715, 'cursor');
+        cursor= this.add.sprite(x, y, cursorFrame);
         cursor.anchor.setTo(0.5, 0.5);
         this.physics.arcade.enable(cursor);
         cursor.body.immovable = true;
         cursor.body.collideWorldBounds = true;
         cursor.body.bounce.set(1);  
         
+        
+    },
+    
+    createHearts: function()
+    {
+        for (heartdraw ; heartdraw < life; heartdraw++)
+            {
+                    var  leben= this.add.sprite(16+(42*heartdraw), 16, 'leben');
+                    leben.scale.setTo(0.05);
+                    heartcounter[heartdraw]= leben;
+                
+            }
     },
     
     createCursor2: function()
@@ -363,6 +584,8 @@ Break.Game.prototype = {
         cursor2.body.bounce.set(1);  
         
     },
+    
+   
     
     createBowser: function()
     {

@@ -7,11 +7,16 @@ Break.Preloader.prototype = {
         
         
     this.load.image('cursor', 'images/cursor.png');
-        this.load.image('cursor2', 'images/cursor2.png');
+    this.load.image('maxcursor', 'images/maxcursor.png');
+    this.load.image('cursor2', 'images/cursor2.png');
     this.load.image('ball', 'images/ball.png');
-        this.load.image('bowser', 'images/bowser.png');
-        this.load.spritesheet('bowseranim','images/bowseranim.png',655,374,3);
-        
+    this.load.image('bowser', 'images/bowser.png');
+    this.load.spritesheet('bowseranim','images/bowseranim.png',655,374,3);
+
+    this.load.image('leben', 'images/leben.png');
+
+    this.load.image('infinity','images/infinity.png');
+    this.load.image('snowflake','images/snowflake.png'); 
         
         //Bloecke
     this.load.image('leicht', 'images/bloecke/blockleicht/leicht.png');
@@ -25,6 +30,9 @@ Break.Preloader.prototype = {
     this.load.image('schwer4', 'images/bloecke/blockschwer/schwer4.png');
         
     this.load.image('unmoeglich', 'images/bloecke/blockunmoeglich/unmoeglich.png');
+        
+    this.load.image('featureblock', 'images/bloecke/featureblock.png');
+    this.load.image('eiblock', 'images/bloecke/eiblock.png');
     
         
         //Hintergruende
@@ -52,6 +60,9 @@ Break.Preloader.prototype = {
     this.load.image('level3label','images/labels/level3label.png');
     this.load.image('eigenelabel','images/labels/eigenelabel.png');
         
+    this.load.image('gameover','images/labels/gameover.png');    
+    this.load.image('pressspace','images/labels/pressspace.png'); 
+        
     this.load.image('musicofflabel','images/labels/musicofflabel.png');
     this.load.image('musiconlabel','images/labels/musiconlabel.png');
     this.load.image('soundofflabel','images/labels/soundofflabel.png');
@@ -60,8 +71,6 @@ Break.Preloader.prototype = {
         //Menü
     this.load.spritesheet('supermario','images/supermario.png',170,250,12);
     this.load.image('boden','images/boden.png'); 
-    this.load.image('test1','images/test1.png');  
-    this.load.image('test2','images/test2.png');
     this.load.image('menuebutton','images/startbutton1.png');
     this.load.image('pipe','images/pipe.png');
     this.load.image('helfer','images/helfer.png');    
