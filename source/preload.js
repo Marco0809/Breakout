@@ -8,15 +8,21 @@ Break.Preloader.prototype = {
         
     this.load.image('cursor', 'images/cursor.png');
     this.load.image('maxcursor', 'images/maxcursor.png');
+    this.load.image('cursorEins', 'images/cursorPlusEins.png');
+        this.load.image('cursorZwei', 'images/cursorPlusZwei.png');
+        this.load.image('cursorDrei', 'images/cursorPlusDrei.png');
     this.load.image('cursor2', 'images/cursor2.png');
     this.load.image('ball', 'images/ball.png');
     this.load.image('bowser', 'images/bowser.png');
     this.load.spritesheet('bowseranim','images/bowseranim.png',655,374,3);
 
+        //Powerups
     this.load.image('leben', 'images/leben.png');
 
     this.load.image('infinity','images/infinity.png');
     this.load.image('snowflake','images/snowflake.png'); 
+    this.load.image('cursorplus','images/cursorplus.png');
+    this.load.image('cursorminus','images/cursorminus.png'); 
         
         //Bloecke
     this.load.image('leicht', 'images/bloecke/blockleicht/leicht.png');
@@ -67,6 +73,16 @@ Break.Preloader.prototype = {
     this.load.image('musiconlabel','images/labels/musiconlabel.png');
     this.load.image('soundofflabel','images/labels/soundofflabel.png');
     this.load.image('soundonlabel','images/labels/soundonlabel.png'); 
+        
+        //Punktlabels
+        
+    this.load.image('10','images/10.png');
+    this.load.image('30','images/30.png');
+    this.load.image('100','images/100.png');
+        
+    this.load.image('5hit','images/5hit.png');
+    this.load.image('10hit','images/10hit.png');
+    this.load.image('15hit','images/15hit.png');
         
         //Menü
     this.load.spritesheet('supermario','images/supermario.png',170,250,12);

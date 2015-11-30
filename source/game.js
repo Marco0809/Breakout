@@ -23,10 +23,9 @@ Break.Game =function(game) {
     var gameover=false;
     var cursorspeed=20;
     var timeCheckFlake;
-    var timeCheckInfinity
+    var timeCheckInfinity;
+    var cursorsize=1;
    
-var scoreText1;
-var scoreText2;
     
    
 
@@ -68,7 +67,7 @@ Break.Game.prototype = {
         if(currentLevel==3 ||currentLevel==2){scoreText.fill= '#FFF';}
 
         //Hinzufügen von Leben
-       this.createHearts();
+        this.createHearts();
         
         
         featurebricks = this.game.add.group();
@@ -106,7 +105,7 @@ Break.Game.prototype = {
                       ball.body.velocity.y=-900;  
                     }
                 }
-                else if(gameover && ballreleased){
+                else if(gameover){
                     this.state.start('MainMenu');
                 }
             }
@@ -182,7 +181,7 @@ Break.Game.prototype = {
 
           }
         
-         if ((5990<= (this.game.time.now - timeCheckFlake)) && ((this.game.time.now - timeCheckFlake) <= 6000)){
+         if ((5990<= (this.game.time.now - timeCheckFlake)) && ((this.game.time.now - timeCheckFlake) <= 6030)){
              
              
              this.timesUpFlake();
@@ -190,7 +189,8 @@ Break.Game.prototype = {
            
         }
         
-        if ((2990<= (this.game.time.now - timeCheckInfinity)) && ((this.game.time.now - timeCheckInfinity) <= 3000)){
+        
+        if ((2980<= (this.game.time.now - timeCheckInfinity)) && ((this.game.time.now - timeCheckInfinity) <= 3200)){
              
              
              this.timesUpInfinity();
@@ -198,10 +198,7 @@ Break.Game.prototype = {
            
         }
         
-        if (this.game.input.keyboard.isDown(Phaser.Keyboard.UP))
-    {
-        this.game.physics.arcade.velocityFromAngle(ball.angle+90, 100, ball.body.velocity);
-    }
+        
 
         this.physics.arcade.collide(ball, bricks, this.ballHitBrick, null, this);
         this.physics.arcade.collide(ball, middleBricks, this.ballHitMiddleBrick, null, this);
@@ -224,9 +221,6 @@ Break.Game.prototype = {
         
     },
     
-    render: function(){
-    this.game.debug.spriteInfo(ball, 32, 32);
-},
 
     
     timesUpInfinity: function()
@@ -266,6 +260,8 @@ Break.Game.prototype = {
             //  Ball is perfectly in the middle
             myBall.body.velocity.x = 2 + Math.random() * 8;
         }
+        
+        //bonuscount=0;
 
     },
 
@@ -288,7 +284,7 @@ Break.Game.prototype = {
         
                 break;
             case 'images/snowflake.png': 
-                 ball.body.angularvelocity=-150;
+                 
                 cursorspeed=10;
                 timeCheckFlake = this.game.time.now;
                 powerupsalife--;
@@ -298,13 +294,52 @@ Break.Game.prototype = {
                  lifepowerupsalife--;               
                 this.createHearts();
                 break;
+            case 'images/cursorplus.png': 
+                if(cursorsize>0 && cursorsize<4){
+                    cursorsize++;
+                }
+                 alert(cursorsize);
+                var tempX = cursor.x;
+                var tempY = cursor.y;
+                cursor.kill();
+                powerupsalife--;
+                switch(cursorsize){
+                    case 2: this.createCursor1('cursorEins', tempX, tempY);
+                       
+                            break;
+                    case 3: this.createCursor1('cursorZwei', tempX, tempY);
+                            break;
+                    case 4: this.createCursor1('cursorDrei', tempX, tempY);
+                            break;
+                }
+                 
+                break;
+            case 'images/cursorminus.png': 
+                if(cursorsize>1 && cursorsize<5){
+                    cursorsize--;
+                }
+                var tempX = cursor.x;
+                var tempY = cursor.y;
+                cursor.kill();
+                
+                powerupsalife--;
+                switch(cursorsize){
+                    case 1: this.createCursor1('cursor', tempX, tempY);
+                        
+                            break;
+                    case 2: this.createCursor1('cursorEins', tempX, tempY);
+                            break;
+                    case 3: this.createCursor1('cursorZwei', tempX, tempY);
+                            break;
+                }
+                break;
         }
       
     },
     
      createFeatureBlock: function(brickX, brickY)
     {
-        var rndd = this.game.rnd.integerInRange(1, 1);
+        var rndd = this.game.rnd.integerInRange(1, 7);
         if(rndd==1){
                     var featurebrick;
                     var eggbrick;
@@ -330,7 +365,7 @@ Break.Game.prototype = {
     {
     
 
-        var rnd = this.game.rnd.integerInRange(1, 2);
+        var rnd = this.game.rnd.integerInRange(1, 4);
         switch(rnd){
             case 1: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'infinity');
                     powerup[indexPowerArray].scale.setTo(0.1);
@@ -342,6 +377,21 @@ Break.Game.prototype = {
                 
             case 2: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'snowflake');
                     powerup[indexPowerArray].scale.setTo(0.05);
+                    this.physics.arcade.enable(powerup[indexPowerArray]);
+                    powerup[indexPowerArray].body.velocity.y= 450;
+                    powerupsalife++;
+                    indexPowerArray++;  
+                    break;
+            case 3: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'cursorplus');
+                    powerup[indexPowerArray].scale.setTo(0.2);
+                    this.physics.arcade.enable(powerup[indexPowerArray]);
+                    powerup[indexPowerArray].body.velocity.y= 450;
+                    powerupsalife++;
+                    indexPowerArray++;  
+                    break;
+                
+            case 4: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'cursorminus');
+                    powerup[indexPowerArray].scale.setTo(0.2);
                     this.physics.arcade.enable(powerup[indexPowerArray]);
                     powerup[indexPowerArray].body.velocity.y= 450;
                     powerupsalife++;
@@ -382,11 +432,15 @@ Break.Game.prototype = {
     },
         
     ballHitBrick: function(myBall, myBrick) {
-
-        score = score +10;
+        var points = 10;
+        score = score +points;
+        this.createFadeScore( myBrick.x, myBrick.y, points);
         scoreText.text = score;
         bricks.removeFromHash(myBrick);
         myBrick.kill();
+        bonuscount++;
+        
+        this.createFadeBonus();
         
         
         this.createFeatureBlock( myBrick.x, myBrick.y);
@@ -412,11 +466,16 @@ Break.Game.prototype = {
 		}
         
 		else{
-			score = score +30;
+            var points = 30;
+            score = score +points;
+            this.createFadeScore( myBrick.x, myBrick.y, points);
+			
 			scoreText.text = score;
             middleBricks.removeFromHash(myBrick);
 			myBrick.kill();
 			BrickSound.play();
+            bonuscount++;
+            this.createFadeBonus();
             
             
             this.createFeatureBlock( myBrick.x, myBrick.y);
@@ -463,8 +522,11 @@ Break.Game.prototype = {
                         
                           case 3: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
                         	
-                            score = score +100;
+                            var points = 100;
+                            score = score +points;
                             scoreText.text = score;
+                            this.createFadeScore( myBrick.x, myBrick.y, points);
+                           
                             strongBricks.removeFromHash(myBrick);
                             myBrick.kill();
                             if(soundon){
@@ -472,6 +534,8 @@ Break.Game.prototype = {
                            
                             
                             this.createFeatureBlock( myBrick.x, myBrick.y);
+                            bonuscount++;
+                            this.createFadeBonus();
                             break;
                         
                     
@@ -486,16 +550,10 @@ Break.Game.prototype = {
     }, 	
 
 
-	
-    
-    
-    
-    
-    
     
     ballHitBottom: function(myBall, leben) {
 
-        if(life > 0)
+        if((life != 0)&&(!gameover))
         {
 
 	
@@ -505,6 +563,7 @@ Break.Game.prototype = {
             ballreleased = false;
             this.createBall();
             heartcounter[life].kill();
+            bonuscount=0;
             
            
         
@@ -515,17 +574,21 @@ Break.Game.prototype = {
             gameoverlabel.anchor.set(0.5);
             gameoverlabel.scale.setTo(0.7);
             gameoverlabel.alpha = 0;
-            this.add.tween(gameoverlabel).to( { alpha: 1}, 50000, Phaser.Easing.Linear.None, true, 0, 0, true);
+            this.add.tween(gameoverlabel).to( { alpha: 1}, 10000, Phaser.Easing.Linear.None, true, 0, 0, false);
             
             var spacelabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY+90, 'pressspace');
             spacelabel.anchor.set(0.5);
             spacelabel.scale.setTo(0.4);
             spacelabel.alpha = 0;
-            this.add.tween(spacelabel).to( { alpha: 1 }, 10000, Phaser.Easing.Linear.None, true, 2000, 0, true);
+            this.add.tween(spacelabel).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, 0, false);
             
             ball.kill();
             gameover=true;
-            life=3;
+            currentLevel=1;
+            life = 3;
+            heartdraw=0;
+            score=0;
+            bonuscount=0;
             
         }
     },
@@ -546,7 +609,7 @@ Break.Game.prototype = {
         ball.body.allowGravity = false;
         ball.body.gravity.y = 50;
         ball.body.angle.enable =true;
-            ball.body.allowRotation=true;
+        ball.body.allowRotation=true;
     },
     
     createCursor1: function(cursorFrame, x, y)
@@ -585,7 +648,54 @@ Break.Game.prototype = {
         
     },
     
-   
+    createFadeScore: function(imageX, imageY, score)
+    {
+        switch(score)
+        {
+            case 10:    var scoreimg = this.add.sprite(imageX+10, imageY-15, '10');
+                        break;
+            case 30:    var scoreimg = this.add.sprite(imageX+5, imageY-15, '30');
+                        break;
+            case 100:   var scoreimg = this.add.sprite(imageX+5, imageY-15, '100');
+                        break;
+        }
+
+
+        scoreimg.scale.setTo(0.05);
+        this.add.tween(scoreimg).to( { alpha: 0 }, 1500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        this.physics.arcade.enable(scoreimg);
+        scoreimg.body.velocity.y = -100;
+    },
+    
+     createFadeBonus: function()
+    {
+        // Helfer um zu verhindern, dass die Eigenschaften des Bildes auch abgerufen werden, wenn es kein Bild gibt
+        var helfer = false;
+                            
+        switch(bonuscount)
+        {
+            case 5:     bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '5hit');
+                        score = score +30;
+                        helfer = true;
+                        break;
+            case 10:    bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '10hit');
+                        score = score +100;
+                        helfer = true;
+                        break;
+            case 15:    bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '15hit');
+                        score = score +250;
+                        helfer = true;
+                        break;
+        }
+
+        if(helfer){
+        bonusimg.scale.setTo(0.3);
+        bonusimg.anchor.set(0.5);
+        this.add.tween(bonusimg).to( { alpha: 0 }, 1500, Phaser.Easing.Linear.None, true, 0, 0, false);
+        this.physics.arcade.enable(bonusimg);
+        bonusimg.body.velocity.y = -100;
+        }
+    },
     
     createBowser: function()
     {
