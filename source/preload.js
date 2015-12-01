@@ -39,6 +39,15 @@ Break.Preloader.prototype = {
         
     this.load.image('featureblock', 'images/bloecke/featureblock.png');
     this.load.image('eiblock', 'images/bloecke/eiblock.png');
+        
+        this.load.image('delete', 'images/bloecke/delete.png');
+    this.load.image('speichern', 'images/speichern.png');
+        this.load.image('menue', 'images/menue.png');
+        
+        this.load.image('reset', 'images/reset.png');
+    
+        
+        
     
         
         //Hintergruende

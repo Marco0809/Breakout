@@ -414,7 +414,7 @@ Break.MainMenu.prototype = {
           }
             
           if(startstate==0 && soundstate==0 &&editorstate==0){
-              //Show Leveleditor
+              this.game.state.start('Editor');
           }
             
            
