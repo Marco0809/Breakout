@@ -46,7 +46,7 @@ Break.Preloader.prototype = {
         
         this.load.image('reset', 'images/reset.png');
     
-        
+        this.load.image('freeze', 'images/freeze.png');
         
     
         

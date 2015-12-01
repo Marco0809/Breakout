@@ -99,11 +99,11 @@ function LevelZwei (game)
         
         
             var j = 0;
-             for (var y = 0; y < 20; y++)
+             for (var y = 0; y < 12; y++)
             {
                 
                     var brick;
-                    brick = strongBricks.create(20+(y*60), 250, 'schwer1', 'schwer1.png');
+                    brick = strongBricks.create(160+(y*60), 250, 'schwer1', 'schwer1.png');
                     brick.scale.set(0.1);
                     brick.body.bounce.set(1);
                     brick.body.immovable = true;

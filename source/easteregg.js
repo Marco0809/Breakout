@@ -30,7 +30,9 @@ timeCheck = this.game.time.now;
         bowser.body.velocity.x=450;
         eggtrigger=false;
         var BowserLaugh = this.add.audio('BowserLaugh');
+        if(soundon){
         BowserLaugh.play();
+        }
 
         
        

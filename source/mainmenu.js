@@ -15,6 +15,7 @@ Break.MainMenu = function (game) {
     var difficulty = 1;
     var playercount;
     var eggtrigger=false;
+    var choseEditedLevel=1;
     
     
 Break.MainMenu.prototype = {
@@ -244,7 +245,12 @@ Break.MainMenu.prototype = {
                         playercount=1;
                         break;
                     case 2:
-                        currentLevel=1
+                        currentLevel=1;
+                        this.game.state.start('Game');
+                        startstate=0;
+                        break;
+                    case 3:
+                        currentLevel=4;
                         this.game.state.start('Game');
                         startstate=0;
                         break;
@@ -252,7 +258,7 @@ Break.MainMenu.prototype = {
                 }
             }
             
-            if(soundstate==1 ){
+            else if(soundstate==1 ){
                 switch(soundon) {
                     case true:
                         label1.loadTexture('soundofflabel',0);
@@ -268,6 +274,13 @@ Break.MainMenu.prototype = {
            
            
             }
+            
+            else if(editorstate==1){
+                choseEditedLevel=1;
+                this.game.state.start('Editor');
+            }
+            
+           
         }
     },
     
@@ -295,7 +308,7 @@ Break.MainMenu.prototype = {
             }
             
             
-            if(startstate==0 && editorstate==0 && soundstate==0){
+            else if(startstate==0 && editorstate==0 && soundstate==0){
                         
                         label1.x = 280;
                         label2.x = 475;
@@ -337,14 +350,23 @@ Break.MainMenu.prototype = {
                 
             }
             
-            if(startstate==2){
+            else if(startstate==2){
                currentLevel=2;
                this.game.state.start('Game');
             }
                        
-            if(startstate==1){
+            else if(startstate==1){
                 this.showLevelMenu();
                 playercount=2;
+            }
+            
+            else if(startstate==3){
+                currentLevel=5;
+               this.game.state.start('Game');
+            }
+            else if(editorstate==1){
+                choseEditedLevel=2;
+                this.game.state.start('Editor');
             }
             
             
@@ -384,17 +406,29 @@ Break.MainMenu.prototype = {
                 playercount=0;
             }
             
-            if(soundstate==1) {
-                soundstate=0;
+            else if(soundstate==1) {
+                
                 this.showMainMenu();
+                startstate=0;
+                soundstate=0;
+                editorstate=0;
                 
                 
             }
             
-            if(startstate==2){
+            else if(startstate==2){
                 currentLevel=3;
                this.game.state.start('Game');
                 
+            }
+            
+            else if(startstate==3){
+                currentLevel=6;
+               this.game.state.start('Game');
+            }
+            else if(editorstate==1){
+                choseEditedLevel=3;
+                this.game.state.start('Editor');
             }
             
             
@@ -413,13 +447,29 @@ Break.MainMenu.prototype = {
               this.showMainMenu();
           }
             
-          if(startstate==0 && soundstate==0 &&editorstate==0){
-              this.game.state.start('Editor');
+          else if(startstate==0 && soundstate==0 &&editorstate==0){
+              this.showOwnLevelMenu();
+              startstate=0;
+              editorstate=1;
           }
+            
+            else if(startstate==2){
+                this.showOwnLevelMenu();
+            }
+            
+            else if(startstate==3){
+                this.showLevelMenu();
+                }
+            else if(editorstate==1){
+                this.showMainMenu();
+            }
             
            
             
         }
+        
+        
+        
         
         
     },
@@ -524,6 +574,7 @@ Break.MainMenu.prototype = {
         button1.x =180;
         button2.x = 396;
         button3.x = 612;
+        button4.x= 830;
         button4.body.enable=true;
         button4.visible=true;
         
@@ -533,6 +584,36 @@ Break.MainMenu.prototype = {
         
         
     },
+        
+    showOwnLevelMenu: function(){
+        label1.loadTexture('level1label',0);
+        label2.loadTexture('level2label',0);
+        label3.loadTexture('level3label',0);
+        label4.loadTexture('zuruecklabel',0);
+        label5.visible=false;
+        label4.visible=true;
+        label3.visible=true;
+
+        label1.x=110;
+        label1.y=395;
+        label2.x=326;
+        label2.y=395;
+        label3.x=542;
+        label3.y=398;
+        label4.x=758;
+        label4.y=395;
+
+        button1.x = 180;
+        button2.x = 396;
+        button3.x = 612;
+        button4.x = 830;
+        button4.body.enable=true;
+        button4.visible=true;
+        button5.body.enable=false;
+        button5.visible=false;
+        startstate=3;
+    },
+        
     
     showPlayerMenu: function(){
         button1.x = 180;

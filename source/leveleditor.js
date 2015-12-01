@@ -12,6 +12,7 @@ var StrongBricks;
 var bricksArray = new Array ();
 var brickTypeArray = new Array();
 var line;
+var land;
 
 Break.Editor.prototype = {
 
@@ -79,6 +80,15 @@ create: function() {
     
     resetButton = bricks.create(900, 680, 'reset');
 	resetButton.scale.set(0.1);
+    
+    bg1Button = bricks.create(50, 650, 'hintergrund1');
+	bg1Button.scale.set(0.05);
+    
+    bg2Button = bricks.create(200, 650, 'hintergrund2');
+	bg2Button.scale.set(0.05);
+    
+    bg3Button = bricks.create(350, 650, 'hintergrund3');
+	bg3Button.scale.set(0.05);
 
 	line = new Phaser.Line(0, 520, 1024, 520);
 
@@ -119,13 +129,25 @@ update: function(){
 			
 			else  if ( this.game.input.x>=saveButton.x && this.game.input.x<(saveButton.x+114) && this.game.input.y>=saveButton.y && this.game.input.y<(saveButton.y+61))
 			{
-						localStorage["OwnLevel1"] = JSON.stringify(brickTypeArray);		
-						var myArray = JSON.parse(localStorage["OwnLevel1"]);
-						alert(myArray[1]);
+                        switch(choseEditedLevel){
+                            case 1:     
+                                localStorage["OwnLevel1"] = JSON.stringify(brickTypeArray);		
+                                var myArray = JSON.parse(localStorage["OwnLevel1"]);
+                                alert(myArray[1]);
+                            case 2:     
+                                localStorage["OwnLevel2"] = JSON.stringify(brickTypeArray);		
+                                var myArray = JSON.parse(localStorage["OwnLevel2"]);
+                                alert(myArray[1]);
+                            case 3:     
+                                localStorage["OwnLevel3"] = JSON.stringify(brickTypeArray);		
+                                var myArray = JSON.parse(localStorage["OwnLevel3"]);
+                                alert(myArray[1]);
+                        }
+						
 			}
 			
 			
-			else  if ( this.game.input.x>=deleteBrick.x && this.game.input.x<(deleteBrick.x+114) && this.game.input.y>=deleteBrick.y && this.game.input.y<(deleteBrick.y+61))
+			else  if ( this.game.input.x>=deleteBrick.x && this.game.input.x<(deleteBrick.x+60) && this.game.input.y>=deleteBrick.y && this.game.input.y<(deleteBrick.y+38))
 			{
 				brickType = 'delete';
 				
@@ -134,11 +156,50 @@ update: function(){
             else  if ( this.game.input.x>=menueButton.x && this.game.input.x<(menueButton.x+114) && this.game.input.y>=menueButton.y && this.game.input.y<(menueButton.y+61))
 			{
 				this.game.state.start('MainMenu');
+                editorstate=0;
+                soundstate=0;
+                startstate=0;
+				
+			}
+            
+            //if the deleteAll Button
+			else  if ( this.game.input.x>=resetButton.x && this.game.input.x<(resetButton.x+114) && this.game.input.y>=resetButton.y && this.game.input.y<(resetButton.y+61))
+			{
+			
+				for(var i = 0; i<=50; i++){
+						
+						for(var j = 0; j<=30; j++){
+							if(   bricksArray[i][j]  != null)
+							{
+						
+								bricksArray[i][j].kill();
+								bricksArray[i][j]= null;
+								brickTypeArray [i][j] = null;
+							}
+						}
+					}
+			}
+            
+            else  if ( this.game.input.x>=bg1Button.x && this.game.input.x<(bg1Button.x+114) && this.game.input.y>=bg1Button.y && this.game.input.y<(bg1Button.y+61))
+			{
+				land.loadTexture('hintergrund1',0);
+				
+			}
+            
+            else  if ( this.game.input.x>=bg2Button.x && this.game.input.x<(bg2Button.x+114) && this.game.input.y>=bg2Button.y && this.game.input.y<(bg2Button.y+61))
+			{
+				land.loadTexture('hintergrund2',0);
+				
+			}
+            
+            else  if ( this.game.input.x>=bg3Button.x && this.game.input.x<(bg3Button.x+114) && this.game.input.y>=bg3Button.y && this.game.input.y<(bg3Button.y+61))
+			{
+				land.loadTexture('hintergrund3',0);
 				
 			}
 		}
 		
-		else
+		else if(this.game.input.x < 1020)
 		{
 	
 			if(brickType == 'normal')

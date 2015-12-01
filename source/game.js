@@ -25,6 +25,7 @@ Break.Game =function(game) {
     var timeCheckFlake;
     var timeCheckInfinity;
     var cursorsize=1;
+    var freezescreen;
    
     
    
@@ -41,11 +42,17 @@ Break.Game.prototype = {
         
 
         switch(currentLevel){
-            case 1: LevelEins(this);
+                case 1: LevelEins(this);
                 break;
                 case 2: LevelZwei(this);
                 break;
                 case 3: LevelDrei(this);
+                break;
+                case 4: ownLevel(this, 1);
+                break;
+                case 5: ownLevel(this, 2);
+                break;
+                case 6: ownLevel(this, 3);
                 break;
         }
        
@@ -80,7 +87,8 @@ Break.Game.prototype = {
 
         //Maus aktivieren
         this.input.mouse.capture = true;
-        
+        freezescreen = this.add.sprite(0, 0, 'freeze');
+        freezescreen.visible=false;
         
 
        
@@ -235,7 +243,7 @@ Break.Game.prototype = {
     timesUpFlake: function()
     {
         
-            ball.body.angularvelocity=-450;
+            freezescreen.visible=false;
             cursorspeed=20;
     },
 
@@ -286,6 +294,7 @@ Break.Game.prototype = {
             case 'images/snowflake.png': 
                  
                 cursorspeed=10;
+                freezescreen.visible=true;
                 timeCheckFlake = this.game.time.now;
                 powerupsalife--;
         
