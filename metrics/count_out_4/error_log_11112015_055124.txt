@@ -1,5 +1,0 @@
-Warning: File is empty (D:\Development\4_Breakout\source\level1.js)
-Warning: File is empty (D:\Development\4_Breakout\source\level2.js)
-Warning: File is empty (D:\Development\4_Breakout\source\level3.js)
-Warning: Truncated 3 line(s) in file (D:\Development\4_Breakout\source\phaser.js)
-Warning: Truncated 4 line(s) in file (D:\Development\4_Breakout\source\phaser.min.js)
