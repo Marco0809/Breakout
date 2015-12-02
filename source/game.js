@@ -32,6 +32,7 @@ Break.Game =function(game) {
     var cheat ="";
     var timeCheckCheat;
     var godmode=false;
+    var cursorsize2 =1;
    
     
    
@@ -68,7 +69,7 @@ Break.Game.prototype = {
         
         this.createCursor1('cursor',520, 720);
         if(playercount==2){
-            this.createCursor2();
+            this.createCursor2('cursor2', 600, 720);
         }
         
         //Hinzufügen des BAlls
@@ -247,6 +248,14 @@ Break.Game.prototype = {
         this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);
         }
         
+        for(var i=0; i<=powerupsalife; i++){
+        this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
+        }
+        
+        for(var k=0; k<=lifepowerupsalife; k++){
+        this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);
+        }
+        
         
         
     },
@@ -377,6 +386,82 @@ Break.Game.prototype = {
                     case 2: this.createCursor1('cursorEins', tempX, tempY);
                             break;
                     case 3: this.createCursor1('cursorZwei', tempX, tempY);
+                            break;
+                }
+                break;
+        }
+      
+    },
+    
+    
+     powerupHitCursor2:function(myPowerup, myCursor){
+        
+        
+        myPowerup.kill();
+        
+        
+       
+        switch(myPowerup.frameName){
+            case 'images/infinity.png': 
+                var tempX = cursor2.x;
+                var tempY = cursor2.y;
+                cursor2.kill();
+                this.createCursor2('maxcursor', tempX, tempY);
+                
+                timeCheckInfinity = this.game.time.now;
+                powerupsalife--;
+        
+                break;
+            case 'images/snowflake.png': 
+                 
+                cursorspeed=5;
+                freezescreen.visible=true;
+                timeCheckFlake = this.game.time.now;
+                powerupsalife--;
+        
+                break;
+            case 'images/leben.png': if(life<21){
+                life++;
+                 lifepowerupsalife--;               
+                this.createHearts();
+            }
+                break;
+            case 'images/cursorplus.png': 
+                if(cursorsize2>0 && cursorsize2<4){
+                    cursorsize2++;
+                }
+                 alert(cursorsize2);
+                var tempX = cursor2.x;
+                var tempY = cursor2.y;
+                cursor2.kill();
+                powerupsalife--;
+                switch(cursorsize2){
+                    case 2: this.createCursor2('cursorEins', tempX, tempY);
+                       
+                            break;
+                    case 3: this.createCursor2('cursorZwei', tempX, tempY);
+                            break;
+                    case 4: this.createCursor2('cursorDrei', tempX, tempY);
+                            break;
+                }
+                 
+                break;
+            case 'images/cursorminus.png': 
+                if(cursorsize2>1 && cursorsize2<5){
+                    cursorsize2--;
+                }
+                var tempX = cursor2.x;
+                var tempY = cursor2.y;
+                cursor2.kill();
+                
+                powerupsalife--;
+                switch(cursorsize2){
+                    case 1: this.createCursor2('cursor2', tempX, tempY);
+                        
+                            break;
+                    case 2: this.createCursor2('cursorEins', tempX, tempY);
+                            break;
+                    case 3: this.createCursor2('cursorZwei', tempX, tempY);
                             break;
                 }
                 break;
@@ -686,10 +771,10 @@ Break.Game.prototype = {
             }
     },
     
-    createCursor2: function()
+    createCursor2: function(cursorFrame, x, y)
     {
         
-        cursor2= this.add.sprite(this.world.centerX+250, 715, 'cursor2');
+        cursor2= this.add.sprite(x, y, 'cursor2');
         cursor2.anchor.setTo(0.5, 0.5);
         this.physics.arcade.enable(cursor2);
         cursor2.body.immovable = true;
