@@ -27,7 +27,13 @@ function LevelEins (game)
         bottom = game.add.group();
         bottom.enableBody = true;
 
-            for (var y = 0; y < 3; y++)
+        
+         var brick;
+                    brick = bricks.create(100 , 100 , 'leicht', 'leicht.png');
+                    brick.scale.set(0.1);
+                    brick.body.bounce.set(1);
+                    brick.body.immovable = true;
+          /*  for (var y = 0; y < 3; y++)
             {
                 for (var x = 0; x < 14; x++)
                 {
@@ -51,7 +57,7 @@ function LevelEins (game)
                     brick.body.immovable = true;
 					alreadyHittedBricks[i] = 0;
                 }
-            }
+            }*/
 
         var bot = bottom.create(1024, 500, 'bottom', 'StufeEins.png');
 

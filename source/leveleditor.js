@@ -20,7 +20,6 @@ Break.Editor.prototype = {
 
 create: function() {
     
-	
 
     this.scale.pageAlignHorizontally = true;
         this.scale.pageAlignVertically = true;
@@ -134,14 +133,20 @@ update: function(){
                                 localStorage["OwnLevel1"] = JSON.stringify(brickTypeArray);		
                                 var myArray = JSON.parse(localStorage["OwnLevel1"]);
                                 alert(myArray[1]);
+                                alert(choseEditedLevel);
+                                break;
                             case 2:     
                                 localStorage["OwnLevel2"] = JSON.stringify(brickTypeArray);		
                                 var myArray = JSON.parse(localStorage["OwnLevel2"]);
                                 alert(myArray[1]);
+                                alert(choseEditedLevel);
+                                break;
                             case 3:     
                                 localStorage["OwnLevel3"] = JSON.stringify(brickTypeArray);		
                                 var myArray = JSON.parse(localStorage["OwnLevel3"]);
                                 alert(myArray[1]);
+                                alert(choseEditedLevel);
+                                break;
                         }
 						
 			}
