@@ -33,6 +33,8 @@ Break.Game =function(game) {
     var timeCheckCheat;
     var godmode=false;
     var cursorsize2 =1;
+    var botmultiplier=0;
+    var newCursorX;
    
     
    
@@ -131,26 +133,27 @@ Break.Game.prototype = {
         
         
         //////SPIELER 1
-        if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        {
-            // Cursor ändert Position bei Tastaturklick
-            cursor.x -= cursorspeed;
-            //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
-            if(!ballreleased){ 
-            ball.x = cursor.x ;}
+        if(playercount!==0){
+            if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+            {
+                // Cursor ändert Position bei Tastaturklick
+                cursor.x -= cursorspeed;
+                //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
+                if(!ballreleased){ 
+                ball.x = cursor.x ;}
 
+            }
+            else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+            {
+
+                 // Cursor ändert Position bei Tastaturklick
+                cursor.x += cursorspeed;
+                if(!ballreleased){ 
+                //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
+                ball.x = cursor.x ;}
+
+            }
         }
-        else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        {
-
-             // Cursor ändert Position bei Tastaturklick
-            cursor.x += cursorspeed;
-            if(!ballreleased){ 
-            //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
-            ball.x = cursor.x ;}
-
-        }
-        
         //Falls es 2. Spieler gibt
         if(playercount==2) {
          //////SPIELER 2
@@ -169,6 +172,22 @@ Break.Game.prototype = {
             }
 
 
+        }
+        
+        // BOT
+        
+        if(playercount ==0 && ballreleased){
+           
+            newCursorX = cursor.x+botmultiplier;
+                if( newCursorX < (ball.x+2) || newCursorX<(ball.x-2)){
+                    cursor.body.velocity.x = 320;
+                }
+                else if(newCursorX > (ball.x+2) || newCursorX>(ball.x-2)){
+                    cursor.body.velocity.x = -320;
+                }
+                else if(ball.x-5 <newCursorX < ball.x+5){
+                    cursor.body.velocity.x = 0;
+                }
         }
         
         //Wenn der Ball den Boden berührt, führe ballHitBottom(ball)  aus
@@ -242,18 +261,13 @@ Break.Game.prototype = {
         this.physics.arcade.collide(ball, bowser, this.ballHitBowser, null, this);
         for(var i=0; i<=powerupsalife; i++){
         this.physics.arcade.collide(powerup[indexPowerArray-i], cursor, this.powerupHitCursor, null, this);
+           // this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
         }
         
         for(var k=0; k<=lifepowerupsalife; k++){
         this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);
-        }
-        
-        for(var i=0; i<=powerupsalife; i++){
-        this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
-        }
-        
-        for(var k=0; k<=lifepowerupsalife; k++){
-        this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);
+            //this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);
+            
         }
         
         
@@ -315,6 +329,9 @@ Break.Game.prototype = {
         
         //bonuscount=0;
         //fullbonus=false;
+        botmultiplier = this.game.rnd.integerInRange(-20, 20);
+        alert(botmultiplier);
+        
 
     },
 
@@ -925,6 +942,10 @@ Break.Game.prototype = {
                                 break;
             case 'godmodeoff':   godmode=false;
                                 break;
+                case 'a':   alert(ball.x);
+                            alert(newCursorX);
+                                break;
+                
             
         }
     }
