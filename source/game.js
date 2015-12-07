@@ -16,6 +16,8 @@ Break.Game =function(game) {
 	var arrayIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var arrayStrongIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var bowser;
+    var bowserappeared=false;
+    var bowserhit;
     var counterHitStrong =[];
     var heartcounter=[];
     var powerupsalife=0;
@@ -26,6 +28,13 @@ Break.Game =function(game) {
     var timeCheckInfinity;
     var cursorsize=1;
     var freezescreen;
+    var fullbonus=false;
+    var cheat ="";
+    var timeCheckCheat;
+    var godmode=false;
+    var cursorsize2 =1;
+    var botmultiplier=0;
+    var newCursorX;
    
     
    
@@ -62,7 +71,7 @@ Break.Game.prototype = {
         
         this.createCursor1('cursor',520, 720);
         if(playercount==2){
-            this.createCursor2();
+            this.createCursor2('cursor2', 600, 720);
         }
         
         //Hinzufügen des BAlls
@@ -89,6 +98,8 @@ Break.Game.prototype = {
         this.input.mouse.capture = true;
         freezescreen = this.add.sprite(0, 0, 'freeze');
         freezescreen.visible=false;
+        
+        this.game.input.keyboard.addCallbacks( this, this.mykeydownhandler );
         
 
        
@@ -122,26 +133,27 @@ Break.Game.prototype = {
         
         
         //////SPIELER 1
-        if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
-        {
-            // Cursor ändert Position bei Tastaturklick
-            cursor.x -= cursorspeed;
-            //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
-            if(!ballreleased){ 
-            ball.x = cursor.x ;}
+        if(playercount!==0){
+            if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
+            {
+                // Cursor ändert Position bei Tastaturklick
+                cursor.x -= cursorspeed;
+                //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
+                if(!ballreleased){ 
+                ball.x = cursor.x ;}
 
+            }
+            else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
+            {
+
+                 // Cursor ändert Position bei Tastaturklick
+                cursor.x += cursorspeed;
+                if(!ballreleased){ 
+                //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
+                ball.x = cursor.x ;}
+
+            }
         }
-        else if (this.input.keyboard.isDown(Phaser.Keyboard.RIGHT))
-        {
-
-             // Cursor ändert Position bei Tastaturklick
-            cursor.x += cursorspeed;
-            if(!ballreleased){ 
-            //Falls Ball auf Cursor liegt, ist PositionBall = PositionCursor
-            ball.x = cursor.x ;}
-
-        }
-        
         //Falls es 2. Spieler gibt
         if(playercount==2) {
          //////SPIELER 2
@@ -162,10 +174,28 @@ Break.Game.prototype = {
 
         }
         
+        // BOT
+        
+        if(playercount ==0 && ballreleased){
+           
+            newCursorX = cursor.x+botmultiplier;
+                if( newCursorX < (ball.x+2) || newCursorX<(ball.x-2)){
+                    cursor.body.velocity.x = 320;
+                }
+                else if(newCursorX > (ball.x+2) || newCursorX>(ball.x-2)){
+                    cursor.body.velocity.x = -320;
+                }
+                else if(ball.x-5 <newCursorX < ball.x+5){
+                    cursor.body.velocity.x = 0;
+                }
+        }
+        
         //Wenn der Ball den Boden berührt, führe ballHitBottom(ball)  aus
         if(ball.body.onFloor() || ball.body.touching.down)
         {
+            if(!godmode){
             this.ballHitBottom(ball);
+            }
         }
 
         // Wenn es keine Bricks mehr gibt -> nächstes Level
@@ -175,15 +205,20 @@ Break.Game.prototype = {
             // Call next Level 
             switch(currentLevel)
             {
-                case 1:currentLevel=2;
+                case 3:currentLevel=2;
+                    cursorsize=1;
                     this.game.state.start('Game');
                     break;
 
                 case 2: currentLevel=3;
+                    cursorsize=1;
                     this.game.state.start('Game');
                     break;
 
-                case 3: //You won, Return to main Menu 
+                case 1: 
+                    if(!bowserappeared && !gameover){
+                        this.createBowser();
+                    }
                     break;
             }
 
@@ -206,6 +241,13 @@ Break.Game.prototype = {
            
         }
         
+        if ((2980<= (this.game.time.now - timeCheckCheat)) && ((this.game.time.now - timeCheckCheat) <= 3200)){
+             
+             
+            cheat="";
+           
+        }
+        
         
 
         this.physics.arcade.collide(ball, bricks, this.ballHitBrick, null, this);
@@ -216,13 +258,16 @@ Break.Game.prototype = {
         this.physics.arcade.collide(ball, eggbricks, this.ballHitEggBlock, null, this);
         this.physics.arcade.collide(ball, cursor2, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, cursor, this.ballHitCursor, null, this);
-        this.physics.arcade.collide(ball, bowser);
+        this.physics.arcade.collide(ball, bowser, this.ballHitBowser, null, this);
         for(var i=0; i<=powerupsalife; i++){
         this.physics.arcade.collide(powerup[indexPowerArray-i], cursor, this.powerupHitCursor, null, this);
+           // this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
         }
         
         for(var k=0; k<=lifepowerupsalife; k++){
         this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);
+            //this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);
+            
         }
         
         
@@ -237,7 +282,20 @@ Break.Game.prototype = {
             var tempX = cursor.x;
             var tempY = cursor.y;
             cursor.kill();
+            switch(cursorsize){
+                case 1:
             this.createCursor1('cursor', tempX, tempY);
+                    break;
+                    case 2:
+            this.createCursor1('cursorEins', tempX, tempY);
+                    break;
+                    case 3:
+            this.createCursor1('cursorZwei', tempX, tempY);
+                    break;
+                    case 4:
+            this.createCursor1('cursorDrei', tempX, tempY);
+                    break;
+            }
     },
     
     timesUpFlake: function()
@@ -270,6 +328,10 @@ Break.Game.prototype = {
         }
         
         //bonuscount=0;
+        //fullbonus=false;
+        botmultiplier = this.game.rnd.integerInRange(-20, 20);
+        alert(botmultiplier);
+        
 
     },
 
@@ -293,15 +355,17 @@ Break.Game.prototype = {
                 break;
             case 'images/snowflake.png': 
                  
-                cursorspeed=10;
+                cursorspeed=5;
                 freezescreen.visible=true;
                 timeCheckFlake = this.game.time.now;
                 powerupsalife--;
         
                 break;
-            case 'images/leben.png': life++;
+            case 'images/leben.png': if(life<21){
+                life++;
                  lifepowerupsalife--;               
                 this.createHearts();
+            }
                 break;
             case 'images/cursorplus.png': 
                 if(cursorsize>0 && cursorsize<4){
@@ -346,9 +410,85 @@ Break.Game.prototype = {
       
     },
     
+    
+     powerupHitCursor2:function(myPowerup, myCursor){
+        
+        
+        myPowerup.kill();
+        
+        
+       
+        switch(myPowerup.frameName){
+            case 'images/infinity.png': 
+                var tempX = cursor2.x;
+                var tempY = cursor2.y;
+                cursor2.kill();
+                this.createCursor2('maxcursor', tempX, tempY);
+                
+                timeCheckInfinity = this.game.time.now;
+                powerupsalife--;
+        
+                break;
+            case 'images/snowflake.png': 
+                 
+                cursorspeed=5;
+                freezescreen.visible=true;
+                timeCheckFlake = this.game.time.now;
+                powerupsalife--;
+        
+                break;
+            case 'images/leben.png': if(life<21){
+                life++;
+                 lifepowerupsalife--;               
+                this.createHearts();
+            }
+                break;
+            case 'images/cursorplus.png': 
+                if(cursorsize2>0 && cursorsize2<4){
+                    cursorsize2++;
+                }
+                 alert(cursorsize2);
+                var tempX = cursor2.x;
+                var tempY = cursor2.y;
+                cursor2.kill();
+                powerupsalife--;
+                switch(cursorsize2){
+                    case 2: this.createCursor2('cursorEins', tempX, tempY);
+                       
+                            break;
+                    case 3: this.createCursor2('cursorZwei', tempX, tempY);
+                            break;
+                    case 4: this.createCursor2('cursorDrei', tempX, tempY);
+                            break;
+                }
+                 
+                break;
+            case 'images/cursorminus.png': 
+                if(cursorsize2>1 && cursorsize2<5){
+                    cursorsize2--;
+                }
+                var tempX = cursor2.x;
+                var tempY = cursor2.y;
+                cursor2.kill();
+                
+                powerupsalife--;
+                switch(cursorsize2){
+                    case 1: this.createCursor2('cursor2', tempX, tempY);
+                        
+                            break;
+                    case 2: this.createCursor2('cursorEins', tempX, tempY);
+                            break;
+                    case 3: this.createCursor2('cursorZwei', tempX, tempY);
+                            break;
+                }
+                break;
+        }
+      
+    },
+    
      createFeatureBlock: function(brickX, brickY)
     {
-        var rndd = this.game.rnd.integerInRange(1, 7);
+        var rndd = this.game.rnd.integerInRange(1, 1);
         if(rndd==1){
                     var featurebrick;
                     var eggbrick;
@@ -360,10 +500,12 @@ Break.Game.prototype = {
                         featurebrick.body.immovable = true;
                     }
                     else if(rnd==2){
+                        if(life<21){
                         eggbrick = eggbricks.create(brickX, brickY, 'eiblock', 'eiblock.png');
                         eggbrick.scale.set(0.1);
                         eggbrick.body.bounce.set(1);
                         eggbrick.body.immovable = true;
+                        }
                     }
                     
                     
@@ -417,14 +559,14 @@ Break.Game.prototype = {
     
     createEgglife: function(brickX, brickY)
     {
-    
+                    if(life<21){
                     lifepowerup[indexLifepowerArray]= this.add.sprite(brickX, brickY, 'leben');
                     lifepowerup[indexLifepowerArray].scale.setTo(0.05);
                     this.physics.arcade.enable(lifepowerup[indexLifepowerArray]);
                     lifepowerup[indexLifepowerArray].body.velocity.y= 450;
                     lifepowerupsalife++;
                     indexLifepowerArray++;
-                    
+                    }
         
     },
     
@@ -573,6 +715,7 @@ Break.Game.prototype = {
             this.createBall();
             heartcounter[life].kill();
             bonuscount=0;
+            fullbonus=false;
             
            
         
@@ -645,10 +788,10 @@ Break.Game.prototype = {
             }
     },
     
-    createCursor2: function()
+    createCursor2: function(cursorFrame, x, y)
     {
         
-        cursor2= this.add.sprite(this.world.centerX+250, 715, 'cursor2');
+        cursor2= this.add.sprite(x, y, 'cursor2');
         cursor2.anchor.setTo(0.5, 0.5);
         this.physics.arcade.enable(cursor2);
         cursor2.body.immovable = true;
@@ -683,17 +826,23 @@ Break.Game.prototype = {
                             
         switch(bonuscount)
         {
-            case 5:     bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '5hit');
-                        score = score +30;
-                        helfer = true;
+            case 5:     if(!fullbonus){     
+                            bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '5hit');
+                            score = score +30;
+                            helfer = true;
+                        }
                         break;
-            case 10:    bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '10hit');
-                        score = score +100;
-                        helfer = true;
+            case 10:    if(!fullbonus){ 
+                            bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '10hit');
+                            score = score +100;
+                            helfer = true;
+                        }
                         break;
             case 15:    bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '15hit');
                         score = score +250;
                         helfer = true;
+                        fullbonus=true;
+                        bonuscount=0;
                         break;
         }
 
@@ -717,6 +866,9 @@ Break.Game.prototype = {
         bowser.body.bounce.set(1);
         bowser.body.velocity.x=-450;
         
+        bowserhit =0;
+        bowserappeared=true;
+        
         strongBricks.visible=false;
         strongBricks.enableBody=false;
         middleBricks.visible=false;
@@ -727,6 +879,75 @@ Break.Game.prototype = {
         strongBricks.exists = false;
         impossibleBricks.exists = false;
         
+    },
+    
+    ballHitBowser: function(){
+        
+        if(bowserhit==10){
+            var gameoverlabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'gameover');
+            gameoverlabel.anchor.set(0.5);
+            gameoverlabel.scale.setTo(0.7);
+            gameoverlabel.alpha = 0;
+            this.add.tween(gameoverlabel).to( { alpha: 1}, 10000, Phaser.Easing.Linear.None, true, 0, 0, false);
+            
+            var spacelabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY+90, 'pressspace');
+            spacelabel.anchor.set(0.5);
+            spacelabel.scale.setTo(0.4);
+            spacelabel.alpha = 0;
+            this.add.tween(spacelabel).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, 0, false);
+            
+            this.add.tween(bowser).to( { alpha: 0 }, 5000, Phaser.Easing.Linear.None, true, 0, 0, false);
+            ball.kill();
+            gameover=true;
+            currentLevel=1;
+            life = 3;
+            heartdraw=0;
+            score=0;
+            bonuscount=0;
+            bowserappeared=false;
+        }else if(bowserhit<10){
+            bowserhit ++;
+            bowser.alpha=10;
+        }
+    },
+    
+    mykeydownhandler:function( evt )
+    {
+        timeCheckCheat = this.game.time.now;
+        // Skip it unless it's a-z.
+        if( evt.which < "A".charCodeAt(0) || evt.which > "Z".charCodeAt(0) )
+        {
+            
+            return;
+        }
+        
+        var letter = String.fromCharCode( evt.which );
+        if( !evt.shiftKey ) letter = letter.toLowerCase();
+        
+        console.log( letter );
+       // alert(letter);
+        cheat = cheat + letter;
+        //alert(stringz);
+        
+        switch(cheat){
+            case 'givemelife': 
+                                if(life<21){
+                                life++;
+
+                                this.createHearts();
+                                cheat="";
+                                }
+                                break;
+            case 'godmodeon':   godmode=true;
+                                break;
+            case 'godmodeoff':   godmode=false;
+                                break;
+                case 'a':   alert(ball.x);
+                            alert(newCursorX);
+                                break;
+                
+            
+        }
     }
     
 };
