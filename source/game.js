@@ -163,6 +163,29 @@ Break.Game.prototype = {
                 ball.x = cursor.x ;}
 
             }
+            ///////////////////////////////BANANE///////////////////////////////////////////////////////////////////////////
+            else
+            {
+                if (this.input.mousePointer.isDown)
+                {
+                    var xMovePosition = this.input.x;
+                    var yMovePosition = cursor.y ;  
+                    var cursorVelocity = 700;
+                     cursor.body.bounce.set(100);  
+                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);
+                }
+                else
+                {
+                     var xMovePosition = cursor.x;
+                    var yMovePosition = cursor.y ;
+                     var cursorVelocity = 0;
+               
+                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);
+                }
+                    if(!ballreleased){ 
+                        ball.x = cursor.x ;}
+                
+            }
         }
         //Falls es 2. Spieler gibt
         if(playercount==2) {

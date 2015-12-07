@@ -62,6 +62,7 @@ Break.MainMenu.prototype = {
         button1.body.collideWorldBounds = true;
         button1.checkWorldBounds = true;
         button1.body.bounce.set(1);
+        button1.inputEnabled = true;
 
         //Zweiter von Links
         button2= this.add.sprite(396, 422, 'menuebutton');
@@ -72,6 +73,7 @@ Break.MainMenu.prototype = {
         button2.body.collideWorldBounds = true;
         button2.checkWorldBounds = true;
         button2.body.bounce.set(1);
+        button2.inputEnabled = true;
 
         //Zweiter von Rechts
         button3= this.add.sprite(612, 422, 'menuebutton');
@@ -82,6 +84,7 @@ Break.MainMenu.prototype = {
         button3.body.collideWorldBounds = true;
         button3.checkWorldBounds = true;
         button3.body.bounce.set(1);
+        button3.inputEnabled = true;
 
         //Rechter Knopf
 
@@ -93,7 +96,8 @@ Break.MainMenu.prototype = {
         button4.body.collideWorldBounds = true;
         button4.checkWorldBounds = true;
         button4.body.bounce.set(1);
-        
+        button4.inputEnabled = true;
+
         
         //Ganz Rechter Knopf für Levelmenü
 
@@ -107,7 +111,8 @@ Break.MainMenu.prototype = {
         button5.body.bounce.set(1);
         button5.body.enable=false;
         button5.visible=false;
-        
+        button5.inputEnabled = true;
+
         //Eastereggpipe
         
         pipe = this.add.sprite(430, 0, 'pipe');
@@ -126,7 +131,14 @@ Break.MainMenu.prototype = {
         
         //Building Labels
         this.buildLabels();
-        
+        //////////////////////////////////////////////////BANANE//////////////////////////////////////////////////////////////////
+        // Events on Button Click
+         button1.events.onInputDown.add(this.listener1, this);
+         button2.events.onInputDown.add(this.listener2, this);
+         button3.events.onInputDown.add(this.listener3, this);
+         button4.events.onInputDown.add(this.listener4, this);
+         button5.events.onInputDown.add(this.listener5, this);
+        ///////////////////////////////////////////////////BANANE////////////////////////////////////////////////////////////////
     },
     
 
@@ -284,6 +296,61 @@ Break.MainMenu.prototype = {
         }
     },
     
+    ////////////////BANANE/////////////////////////
+    
+    listener1: function(){
+    
+            if(editorstate==0 && soundstate==0){ 
+                
+                switch(startstate) {
+                    case 0:
+                        this.showPlayerMenu();
+                        break;
+                    case 1:
+                        this.showLevelMenu();
+                        playercount=1;
+                        break;
+                    case 2:
+                        currentLevel=1;
+                        this.game.state.start('Game');
+                        startstate=0;
+                        break;
+                    case 3:
+                        currentLevel=4;
+                        this.game.state.start('Game');
+                        startstate=0;
+                        break;
+
+                }
+            }
+            
+            else if(soundstate==1 ){
+                switch(soundon) {
+                    case true:
+                        label1.loadTexture('soundofflabel',0);
+                        soundon=false;
+                        break;
+                    case false:
+                        label1.loadTexture('soundonlabel',0);
+                        soundon=true;
+                        break;
+                    
+
+                }
+           
+           
+            }
+            
+            else if(editorstate==1){
+                choseEditedLevel=1;
+                this.game.state.start('Editor');
+            }
+            
+
+    },
+        ////////////////BANANE/////////////////////////
+
+
     marioHitButton2: function() {
         
         if(supermario.body.touching.up){
@@ -376,7 +443,97 @@ Break.MainMenu.prototype = {
                 
         }
     },
+        
+    ////////////////BANANE/////////////////////////
+        
+    listener2: function(){
+      
+         if(soundstate==1){
+                
+                switch(musicon) {
+                    case false:
+                        
+                        label2.loadTexture('musiconlabel',0);
+                        musicon=true;
+                        break;
+                    case true:
+                        label2.loadTexture('musicofflabel',0);
+                        musicon=false;
+
+
+                        break;
+                    
+
+                }
+            }
+            
+            
+            else if(startstate==0 && editorstate==0 && soundstate==0){
+                        
+                        label1.x = 280;
+                        label2.x = 475;
+                
+                        label1.y = 388;
+                        label2.y = 392;
+                        
+                        if(soundon){
+                            label1.loadTexture('soundonlabel',0);;
+                        } 
+                        else {
+                            label1.loadTexture('soundofflabel',0);
+                        }
+                
+                        if(musicon){
+                           label2.loadTexture('musiconlabel',0);
+                        }
+                    	else{
+                            label2.loadTexture('musicofflabel',0);
+                          
+                        }
+                
+                        
+                        label3.loadTexture('zuruecklabel',0);
+                        
+
+                        
+                        label3.x=640;
+                        label4.visible=false;
+                        label5.visible=false;
+
+                        button1.x = 310;
+                        button2.x = 510;
+                        button3.x = 710;
+                        button4.body.enable=false;
+                        button4.visible=false;
+                
+                        soundstate=1;
+                
+            }
+            
+            else if(startstate==2){
+               currentLevel=2;
+               this.game.state.start('Game');
+            }
+                       
+            else if(startstate==1){
+                this.showLevelMenu();
+                playercount=2;
+            }
+            
+            else if(startstate==3){
+                currentLevel=5;
+               this.game.state.start('Game');
+            }
+            else if(editorstate==1){
+                choseEditedLevel=2;
+                this.game.state.start('Editor');
+            }
+        
+    },
+
     
+        ////////////////BANANE/////////////////////////
+
     marioHitButton3: function() {
         if(supermario.body.touching.up){
             if(startstate==0 && editorstate==0 && soundstate==0){
@@ -441,6 +598,64 @@ Break.MainMenu.prototype = {
         
     },
     
+    ////////////////BANANE/////////////////////////
+        
+        listener3: function(){
+           if(startstate==0 && editorstate==0 && soundstate==0){
+                switch(difficulty) {
+                    case 1:
+                        label3.x=570;
+                        label3.loadTexture('heldlabel',0);
+                        difficulty=2;
+                        break;
+                    case 2:
+                        label3.x=542;
+                        label3.loadTexture('psycholabel',0);
+                        difficulty=3;
+                        break;
+                    case 3:
+                        label3.x=542;
+                        label3.loadTexture('weicheilabel',0);
+                        difficulty=1;
+                        break;
+                    
+
+                }
+            }
+            
+            if(startstate==1) {
+                this.showLevelMenu();
+                playercount=0;
+            }
+            
+            else if(soundstate==1) {
+                
+                this.showMainMenu();
+                startstate=0;
+                soundstate=0;
+                editorstate=0;
+                
+                
+            }
+            
+            else if(startstate==2){
+                currentLevel=3;
+               this.game.state.start('Game');
+                
+            }
+            
+            else if(startstate==3){
+                currentLevel=6;
+               this.game.state.start('Game');
+            }
+            else if(editorstate==1){
+                choseEditedLevel=3;
+                this.game.state.start('Editor');
+            }  
+        },
+         ////////////////BANANE/////////////////////////
+       
+            
     marioHitButton4: function() {
         if(supermario.body.touching.up){
           if(startstate==1){
@@ -473,6 +688,37 @@ Break.MainMenu.prototype = {
         
         
     },
+     
+        ////////////////BANANE/////////////////////////
+
+        
+        listener4: function(){
+          
+            if(startstate==1){
+              this.showMainMenu();
+          }
+            
+          else if(startstate==0 && soundstate==0 &&editorstate==0){
+              this.showOwnLevelMenu();
+              startstate=0;
+              editorstate=1;
+          }
+            
+            else if(startstate==2){
+                this.showOwnLevelMenu();
+            }
+            
+            else if(startstate==3){
+                this.showLevelMenu();
+                }
+            else if(editorstate==1){
+                this.showMainMenu();
+            }
+            
+        },
+    
+        ////////////////BANANE/////////////////////////
+
     
     marioHitButton5: function() {
         if(supermario.body.touching.up){
@@ -483,6 +729,12 @@ Break.MainMenu.prototype = {
         
     },
     
+        ////////////////BANANE/////////////////////////
+    listener5: function(){
+          this.showPlayerMenu();
+
+    },
+    ////////////////BANANE/////////////////////////
     marioHitPipe: function() {
         if(supermario.body.touching.up){
             eggtrigger=true;
