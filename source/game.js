@@ -35,6 +35,7 @@ Break.Game =function(game) {
     var cursorsize2 =1;
     var botmultiplier=0;
     var newCursorX;
+    var timeCheckBot;
    
     
    
@@ -74,6 +75,10 @@ Break.Game.prototype = {
             this.createCursor2('cursor2', 600, 720);
         }
         
+        if(difficulty==3){
+            document.getElementById("body").style.transform= "rotate(180deg)";
+        }
+        
         //Hinzufügen des BAlls
         this.createBall();
        
@@ -101,6 +106,14 @@ Break.Game.prototype = {
         
         this.game.input.keyboard.addCallbacks( this, this.mykeydownhandler );
         
+        if(playercount ==0 && !ballreleased){
+            
+            this.game.time.events.add(1000, this.releaseBall, this);
+             
+            
+          
+        }
+        
 
        
     },
@@ -115,17 +128,14 @@ Break.Game.prototype = {
             if ((this.input.activePointer.leftButton.isDown) || (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) )
             {
                 if(!gameover && !ballreleased){
-                    ball.body.allowGravity = true;
-                    ballreleased = true;
-                    ball.body.immovable = false;
-                    if(difficulty==1){
-                    ball.body.velocity.y=-450;}
-                    else{
-                      ball.body.velocity.y=-900;  
-                    }
+                    this.releaseBall();
                 }
                 else if(gameover){
+                    
                     this.state.start('MainMenu');
+                   
+                    
+                     
                 }
             }
         
@@ -177,18 +187,11 @@ Break.Game.prototype = {
         // BOT
         
         if(playercount ==0 && ballreleased){
+            
+            cursor.x = ball.x + botmultiplier;
            
-            newCursorX = cursor.x+botmultiplier;
-                if( newCursorX < (ball.x+2) || newCursorX<(ball.x-2)){
-                    cursor.body.velocity.x = 320;
-                }
-                else if(newCursorX > (ball.x+2) || newCursorX>(ball.x-2)){
-                    cursor.body.velocity.x = -320;
-                }
-                else if(ball.x-5 <newCursorX < ball.x+5){
-                    cursor.body.velocity.x = 0;
-                }
         }
+        
         
         //Wenn der Ball den Boden berührt, führe ballHitBottom(ball)  aus
         if(ball.body.onFloor() || ball.body.touching.down)
@@ -205,7 +208,7 @@ Break.Game.prototype = {
             // Call next Level 
             switch(currentLevel)
             {
-                case 3:currentLevel=2;
+                case 1:currentLevel=2;
                     cursorsize=1;
                     this.game.state.start('Game');
                     break;
@@ -215,7 +218,7 @@ Break.Game.prototype = {
                     this.game.state.start('Game');
                     break;
 
-                case 1: 
+                case 3: 
                     if(!bowserappeared && !gameover){
                         this.createBowser();
                     }
@@ -223,23 +226,6 @@ Break.Game.prototype = {
             }
 
           }
-        
-         if ((5990<= (this.game.time.now - timeCheckFlake)) && ((this.game.time.now - timeCheckFlake) <= 6030)){
-             
-             
-             this.timesUpFlake();
-          
-           
-        }
-        
-        
-        if ((2980<= (this.game.time.now - timeCheckInfinity)) && ((this.game.time.now - timeCheckInfinity) <= 3200)){
-             
-             
-             this.timesUpInfinity();
-          
-           
-        }
         
         if ((2980<= (this.game.time.now - timeCheckCheat)) && ((this.game.time.now - timeCheckCheat) <= 3200)){
              
@@ -261,13 +247,10 @@ Break.Game.prototype = {
         this.physics.arcade.collide(ball, bowser, this.ballHitBowser, null, this);
         for(var i=0; i<=powerupsalife; i++){
         this.physics.arcade.collide(powerup[indexPowerArray-i], cursor, this.powerupHitCursor, null, this);
-           // this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
         }
         
         for(var k=0; k<=lifepowerupsalife; k++){
-        this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);
-            //this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);
-            
+        this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);   
         }
         
         
@@ -329,10 +312,24 @@ Break.Game.prototype = {
         
         //bonuscount=0;
         //fullbonus=false;
-        botmultiplier = this.game.rnd.integerInRange(-20, 20);
-        alert(botmultiplier);
-        
+        if(playercount==0){
+       this.game.time.events.add(1500, this.updateBotMultiplier, this);
+        }
 
+    },
+    
+    releaseBall: function(){
+        
+        
+                    ball.body.allowGravity = true;
+                    ballreleased = true;
+                    ball.body.immovable = false;
+                    if(difficulty==1){
+                    ball.body.velocity.y=-450;}
+                    else{
+                      ball.body.velocity.y=-900;  
+                    }
+        
     },
 
     powerupHitCursor:function(myPowerup, myCursor){
@@ -349,16 +346,18 @@ Break.Game.prototype = {
                 cursor.kill();
                 this.createCursor1('maxcursor', tempX, tempY);
                 
-                timeCheckInfinity = this.game.time.now;
+                //timeCheckInfinity = this.game.time.now;
                 powerupsalife--;
+                this.game.time.events.add(5000, this.timesUpInfinity, this);
         
                 break;
             case 'images/snowflake.png': 
                  
                 cursorspeed=5;
                 freezescreen.visible=true;
-                timeCheckFlake = this.game.time.now;
+                //timeCheckFlake = this.game.time.now;
                 powerupsalife--;
+                 this.game.time.events.add(5000, this.timesUpFlake, this);
         
                 break;
             case 'images/leben.png': if(life<21){
@@ -371,7 +370,7 @@ Break.Game.prototype = {
                 if(cursorsize>0 && cursorsize<4){
                     cursorsize++;
                 }
-                 alert(cursorsize);
+               
                 var tempX = cursor.x;
                 var tempY = cursor.y;
                 cursor.kill();
@@ -447,7 +446,7 @@ Break.Game.prototype = {
                 if(cursorsize2>0 && cursorsize2<4){
                     cursorsize2++;
                 }
-                 alert(cursorsize2);
+                 
                 var tempX = cursor2.x;
                 var tempY = cursor2.y;
                 cursor2.kill();
@@ -717,6 +716,14 @@ Break.Game.prototype = {
             bonuscount=0;
             fullbonus=false;
             
+             if(playercount ==0 && !ballreleased){
+            
+            this.game.time.events.add(1000, this.releaseBall, this);
+             
+            
+          
+        }
+            
            
         
         }
@@ -741,6 +748,9 @@ Break.Game.prototype = {
             heartdraw=0;
             score=0;
             bonuscount=0;
+             if(difficulty==3){
+                    document.getElementById("body").style.transform= "rotate(360deg)";  
+            }
             
         }
     },
@@ -881,14 +891,19 @@ Break.Game.prototype = {
         
     },
     
+    updateBotMultiplier:function(){
+            botmultiplier = this.game.rnd.integerInRange(-85, 85);
+             
+    },
+    
     ballHitBowser: function(){
         
         if(bowserhit==10){
-            var gameoverlabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'gameover');
-            gameoverlabel.anchor.set(0.5);
-            gameoverlabel.scale.setTo(0.7);
-            gameoverlabel.alpha = 0;
-            this.add.tween(gameoverlabel).to( { alpha: 1}, 10000, Phaser.Easing.Linear.None, true, 0, 0, false);
+            var youwonlabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'youwon');
+            youwonlabel.anchor.set(0.5);
+            youwonlabel.scale.setTo(0.7);
+            youwonlabel.alpha = 0;
+            this.add.tween(youwonlabel).to( { alpha: 1}, 10000, Phaser.Easing.Linear.None, true, 0, 0, false);
             
             var spacelabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY+90, 'pressspace');
             spacelabel.anchor.set(0.5);
@@ -925,9 +940,9 @@ Break.Game.prototype = {
         if( !evt.shiftKey ) letter = letter.toLowerCase();
         
         console.log( letter );
-       // alert(letter);
+       
         cheat = cheat + letter;
-        //alert(stringz);
+        
         
         switch(cheat){
             case 'givemelife': 
@@ -942,9 +957,7 @@ Break.Game.prototype = {
                                 break;
             case 'godmodeoff':   godmode=false;
                                 break;
-                case 'a':   alert(ball.x);
-                            alert(newCursorX);
-                                break;
+                
                 
             
         }

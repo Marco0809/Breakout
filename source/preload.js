@@ -76,6 +76,7 @@ Break.Preloader.prototype = {
     this.load.image('eigenelabel','images/labels/eigenelabel.png');
         
     this.load.image('gameover','images/labels/gameover.png');    
+        this.load.image('youwon','images/labels/youwon.png'); 
     this.load.image('pressspace','images/labels/pressspace.png'); 
         
     this.load.image('musicofflabel','images/labels/musicofflabel.png');
