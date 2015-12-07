@@ -2,11 +2,8 @@ Break.MainMenu = function (game) {
     var button1, button2, button3, button4, button5, supermario, boden;
    
 };
-    var button1count=0;
-    var button2count=0; 
-    var button3count=0;
-    var button4count=0; 
-    var button5count=0;
+    
+   
     var startstate = 0;
     var soundstate = 0;
     var editorstate=0;
@@ -131,20 +128,21 @@ Break.MainMenu.prototype = {
         
         //Building Labels
         this.buildLabels();
-        //////////////////////////////////////////////////BANANE//////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////// Buttonlistener für die Maussteuerung / Touchsteuerung//////////////////////////////////////////////////////////////////
         // Events on Button Click
          button1.events.onInputDown.add(this.listener1, this);
          button2.events.onInputDown.add(this.listener2, this);
          button3.events.onInputDown.add(this.listener3, this);
          button4.events.onInputDown.add(this.listener4, this);
          button5.events.onInputDown.add(this.listener5, this);
-        ///////////////////////////////////////////////////BANANE////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     },
     
 
        
     update: function() {
-
+            
+        //Kolliedierung von Mario mit einzelnen Blöcken
 	    this.physics.arcade.collide(supermario, boden);
         this.physics.arcade.collide(supermario, button1, this.marioHitButton1, null, this);
         this.physics.arcade.collide(supermario, button2, this.marioHitButton2, null, this);
@@ -156,6 +154,7 @@ Break.MainMenu.prototype = {
         this.physics.arcade.collide(supermario, helfer, this.marioHitHelfer, null, this);
         }
          
+        //Ist das Easteregg deaktiviert, lässt sich Mario steuern
         if(!eggtrigger){
              if (this.input.keyboard.isDown(Phaser.Keyboard.LEFT))
             {
@@ -209,9 +208,7 @@ Break.MainMenu.prototype = {
             }
         }
         
-        if(supermario.body.y==-50){
-            this.game.state.start('Game');
-            }
+       
 	
 	},
 	
@@ -222,7 +219,7 @@ Break.MainMenu.prototype = {
         label3= this.add.sprite(542, 398, 'weicheilabel');
         label4= this.add.sprite(758, 395, 'editorlabel');
         label5= this.add.sprite(758, 395, 'editorlabel');
-       
+       //Größenanpassung
         label1.scale.set(0.13);
         label2.scale.set(0.13);
         label3.scale.set(0.13);
@@ -233,6 +230,8 @@ Break.MainMenu.prototype = {
         
     },
     
+    //Funktion
+    // hinzufügen von Laufanimationen
     buildAnimations: function() {
        
         supermario.animations.add('right', [7,8,9,10], 20, true);
@@ -246,14 +245,15 @@ Break.MainMenu.prototype = {
     
     marioHitButton1: function() {
         if(supermario.body.touching.up){
+            // WENN MAN SICH IM STARTMENÜ BEFINDET
             if(editorstate==0 && soundstate==0){ 
-                
+                //LAUFEN DURCH DIE BUTTONS
                 switch(startstate) {
                     case 0:
-                        this.showPlayerMenu();
+                        this.showPlayerMenu(); // Spielerauswahl
                         break;
                     case 1:
-                        this.showLevelMenu();
+                        this.showLevelMenu(); //Levelauswahl
                         playercount=1;
                         break;
                     case 2:
@@ -261,7 +261,7 @@ Break.MainMenu.prototype = {
                         this.game.state.start('Game');
                         startstate=0;
                         break;
-                    case 3:
+                    case 3: //Diesen Case brauchen wir für die leveleditor asuwahl
                         currentLevel=4;
                         this.game.state.start('Game');
                         startstate=0;
@@ -269,7 +269,7 @@ Break.MainMenu.prototype = {
 
                 }
             }
-            
+            //Button 1 verändert nun seine funktion = Soundauswahl
             else if(soundstate==1 ){
                 switch(soundon) {
                     case true:
@@ -296,8 +296,8 @@ Break.MainMenu.prototype = {
         }
     },
     
-    ////////////////BANANE/////////////////////////
     
+    // Mauslistener für die Smartphonebedienung
     listener1: function(){
     
             if(editorstate==0 && soundstate==0){ 
@@ -348,9 +348,9 @@ Break.MainMenu.prototype = {
             
 
     },
-        ////////////////BANANE/////////////////////////
+        
 
-
+    //Button 2
     marioHitButton2: function() {
         
         if(supermario.body.touching.up){
@@ -374,7 +374,7 @@ Break.MainMenu.prototype = {
                 }
             }
             
-            
+            //Labels und Buttons müssen angepasst werden, wenn das Soundmenue ausgewöhlt wird
             else if(startstate==0 && editorstate==0 && soundstate==0){
                         
                         label1.x = 280;
@@ -444,7 +444,8 @@ Break.MainMenu.prototype = {
         }
     },
         
-    ////////////////BANANE/////////////////////////
+ 
+    //Zweiter Listener für die Mausbedingung des 2. Buttons
         
     listener2: function(){
       
@@ -531,8 +532,7 @@ Break.MainMenu.prototype = {
         
     },
 
-    
-        ////////////////BANANE/////////////////////////
+    // Bedingung des 3. Buttons mit Tastatur
 
     marioHitButton3: function() {
         if(supermario.body.touching.up){
@@ -598,7 +598,7 @@ Break.MainMenu.prototype = {
         
     },
     
-    ////////////////BANANE/////////////////////////
+    //////////////// Listener Button3
         
         listener3: function(){
            if(startstate==0 && editorstate==0 && soundstate==0){
@@ -653,9 +653,9 @@ Break.MainMenu.prototype = {
                 this.game.state.start('Editor');
             }  
         },
-         ////////////////BANANE/////////////////////////
+         ///////////////////////////////////////
        
-            
+            //Tastaturlistener für Button 4
     marioHitButton4: function() {
         if(supermario.body.touching.up){
           if(startstate==1){
@@ -689,7 +689,7 @@ Break.MainMenu.prototype = {
         
     },
      
-        ////////////////BANANE/////////////////////////
+        ////////////////Listener für Button 4 (maus)////////////////////////
 
         
         listener4: function(){
@@ -717,7 +717,7 @@ Break.MainMenu.prototype = {
             
         },
     
-        ////////////////BANANE/////////////////////////
+        //////////////// Tastaturlistener für Button 5 /////////////////////////
 
     
     marioHitButton5: function() {
@@ -729,23 +729,23 @@ Break.MainMenu.prototype = {
         
     },
     
-        ////////////////BANANE/////////////////////////
+        //////////////////////////Mauslistener Button 5////////////
     listener5: function(){
           this.showPlayerMenu();
 
     },
-    ////////////////BANANE/////////////////////////
+    // Freischalten des Eastereggs///////////////////////
     marioHitPipe: function() {
         if(supermario.body.touching.up){
             eggtrigger=true;
             pipe.visible=true;
             pipe.body.enable=false;
+            //Mario wird hineingesogen
             supermario.animations.play('jump')
             supermario.x = 500;
             supermario.body.gravity.set(0, 0);
             supermario.body.collideWorldBounds = true;
             supermario.checkWorldBounds = true;
-            //supermario.body.bounce.set(0.21);
             supermario.body.velocity.y =-100;
             
             
@@ -754,6 +754,7 @@ Break.MainMenu.prototype = {
         
     },
     
+    //Helfer wird benötigt, um Easteregg zu starten (1 Pixel großes Bild unter der Pipe)
     marioHitHelfer: function() {
         if(supermario.body.touching.up){
              helfer.body.enable=true;
@@ -765,6 +766,8 @@ Break.MainMenu.prototype = {
         
     },
     
+    //Funktion für Buttonberührungen
+    //LAbels und Buttons werden verändert
     showLevelMenu: function(){
         
 
@@ -790,6 +793,8 @@ Break.MainMenu.prototype = {
         startstate=2;
     },
     
+    //Funktion für Buttonberührungen
+    //LAbels und Buttons werden verändert
     showMainMenu: function(){
         switch(difficulty) {
             case 1:
@@ -836,7 +841,9 @@ Break.MainMenu.prototype = {
         
         
     },
-        
+       
+    //Funktion für Buttonberührungen
+    //LAbels und Buttons werden verändert
     showOwnLevelMenu: function(){
         label1.loadTexture('level1label',0);
         label2.loadTexture('level2label',0);
@@ -867,6 +874,8 @@ Break.MainMenu.prototype = {
     },
         
     
+    //Funktion für Buttonberührungen
+    //LAbels und Buttons werden verändert
     showPlayerMenu: function(){
         button1.x = 180;
         button2.x = 396;
@@ -892,6 +901,7 @@ Break.MainMenu.prototype = {
         startstate=1;
     },
     
+    //Spielstart
     startLevel1: function() {
         this.game.state.start('Game');
     }

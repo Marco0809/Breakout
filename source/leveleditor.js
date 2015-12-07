@@ -13,6 +13,7 @@ var bricksArray = new Array ();
 var brickTypeArray = new Array();
 var line;
 var land;
+var choseBackground;
 
 Break.Editor.prototype = {
 
@@ -132,20 +133,16 @@ update: function(){
                             case 1:     
                                 localStorage["OwnLevel1"] = JSON.stringify(brickTypeArray);		
                                 var myArray = JSON.parse(localStorage["OwnLevel1"]);
-                                alert(myArray[1]);
-                                alert(choseEditedLevel);
+                                
                                 break;
                             case 2:     
                                 localStorage["OwnLevel2"] = JSON.stringify(brickTypeArray);		
                                 var myArray = JSON.parse(localStorage["OwnLevel2"]);
-                                alert(myArray[1]);
-                                alert(choseEditedLevel);
+                                
                                 break;
                             case 3:     
                                 localStorage["OwnLevel3"] = JSON.stringify(brickTypeArray);		
                                 var myArray = JSON.parse(localStorage["OwnLevel3"]);
-                                alert(myArray[1]);
-                                alert(choseEditedLevel);
                                 break;
                         }
 						
@@ -188,18 +185,21 @@ update: function(){
             else  if ( this.game.input.x>=bg1Button.x && this.game.input.x<(bg1Button.x+114) && this.game.input.y>=bg1Button.y && this.game.input.y<(bg1Button.y+61))
 			{
 				land.loadTexture('hintergrund1',0);
+                choseBackground=1;
 				
 			}
             
             else  if ( this.game.input.x>=bg2Button.x && this.game.input.x<(bg2Button.x+114) && this.game.input.y>=bg2Button.y && this.game.input.y<(bg2Button.y+61))
 			{
 				land.loadTexture('hintergrund2',0);
+                choseBackground=1;
 				
 			}
             
             else  if ( this.game.input.x>=bg3Button.x && this.game.input.x<(bg3Button.x+114) && this.game.input.y>=bg3Button.y && this.game.input.y<(bg3Button.y+61))
 			{
 				land.loadTexture('hintergrund3',0);
+                choseBackground=1;
 				
 			}
 		}

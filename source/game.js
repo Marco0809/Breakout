@@ -1,41 +1,53 @@
 Break.Game =function(game) {
    
 };
+	//Variablenbestimmung fuer Spielgeraete
     var cursor;
     var cursor2;
     var ball;
     var ballreleased;
+	
+	// Variable zur Zaehlung der aktiven Powerups
     var powerup=[];
     var indexPowerArray = 0;
     var lifepowerup=[];
     var indexLifepowerArray = 0;
+	//Textanzeige
     var scoreText;
     var lifeText;
+	//Zaehler fuer Bloecke
 	var alreadyHittedStrongBricks = [];
     var alreadyHittedBricks = [];
 	var arrayIndex = 0; // the current index of the alreadyHittedBricks array will be save here
     var arrayStrongIndex = 0; // the current index of the alreadyHittedBricks array will be save here
-    var bowser;
+    //Bowser beim Abraeumen aller Bloecke. 
+	var bowser;
+	// Hier beginnt die Zaehlung der Bowserhitpoints
     var bowserappeared=false;
     var bowserhit;
+	//Powerups und Bloecke
     var counterHitStrong =[];
     var heartcounter=[];
     var powerupsalife=0;
     var lifepowerupsalife=0;
     var gameover=false;
+	//Wie swchnell sich der Cursor bewegen laesst
     var cursorspeed=20;
-    var timeCheckFlake;
-    var timeCheckInfinity;
+	//Wie gross ist der Cursor
+	var cursorsize2 =1;
     var cursorsize=1;
+	//Freezepowerup und Bonuspunkte
     var freezescreen;
     var fullbonus=false;
+	//Cheatimplementierung
     var cheat ="";
     var timeCheckCheat;
     var godmode=false;
-    var cursorsize2 =1;
+    //Botmodus
     var botmultiplier=0;
     var newCursorX;
-    var timeCheckBot;
+	//Musik
+	var music;
    
     
    
@@ -43,6 +55,8 @@ Break.Game =function(game) {
     
 
 Break.Game.prototype = {
+	    //Funktion:
+		//Die Createfunktion ist phasereigen und wird immer bei Spielstart aufgerufen
     create: function() {
         
 
@@ -50,7 +64,7 @@ Break.Game.prototype = {
         ballreleased=false;
         gameover=false;
         
-
+		//Game wird neu gestartet, level definiert
         switch(currentLevel){
                 case 1: LevelEins(this);
                 break;
@@ -74,7 +88,7 @@ Break.Game.prototype = {
         if(playercount==2){
             this.createCursor2('cursor2', 600, 720);
         }
-        
+        // Ist die Geschwindigkeit Psycho wird der Bildschirm gedreht
         if(difficulty==3){
             document.getElementById("body").style.transform= "rotate(180deg)";
         }
@@ -90,7 +104,7 @@ Break.Game.prototype = {
         //Hinzufügen von Leben
         this.createHearts();
         
-        
+        // Feature und Lebenbricks. Diese gibt es in jedem Level
         featurebricks = this.game.add.group();
         featurebricks.enableBody = true;
 		featurebricks.exists = true;
@@ -103,9 +117,10 @@ Break.Game.prototype = {
         this.input.mouse.capture = true;
         freezescreen = this.add.sprite(0, 0, 'freeze');
         freezescreen.visible=false;
-        
+        // KEyhandler fuer Cheats
         this.game.input.keyboard.addCallbacks( this, this.mykeydownhandler );
         
+		// Automatisches abfeuern des Balles im Botmodus
         if(playercount ==0 && !ballreleased){
             
             this.game.time.events.add(1000, this.releaseBall, this);
@@ -118,7 +133,8 @@ Break.Game.prototype = {
        
     },
 
-
+    //Funktion:
+	//Die Update Funktion ist phasereigen und wird permanent aufgerufen
     update: function() {
        
         //Falls Ball nicht released ist
@@ -131,7 +147,7 @@ Break.Game.prototype = {
                     this.releaseBall();
                 }
                 else if(gameover){
-                    
+                    music.stop();
                     this.state.start('MainMenu');
                    
                     
@@ -163,24 +179,27 @@ Break.Game.prototype = {
                 ball.x = cursor.x ;}
 
             }
-            ///////////////////////////////BANANE///////////////////////////////////////////////////////////////////////////
+            
             else
             {
                 if (this.input.mousePointer.isDown)
                 {
+
+                    cursor.x=this.input.x;
+                    /*
                     var xMovePosition = this.input.x;
                     var yMovePosition = cursor.y ;  
                     var cursorVelocity = 700;
                      cursor.body.bounce.set(100);  
-                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);
+                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);*/
                 }
                 else
                 {
-                     var xMovePosition = cursor.x;
+                    /* var xMovePosition = cursor.x;
                     var yMovePosition = cursor.y ;
                      var cursorVelocity = 0;
                
-                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);
+                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);*/
                 }
                     if(!ballreleased){ 
                         ball.x = cursor.x ;}
@@ -210,7 +229,7 @@ Break.Game.prototype = {
         // BOT
         
         if(playercount ==0 && ballreleased){
-            
+            //Position des Cursors ist gleich ballposition undzufallsvariable
             cursor.x = ball.x + botmultiplier;
            
         }
@@ -233,14 +252,16 @@ Break.Game.prototype = {
             {
                 case 1:currentLevel=2;
                     cursorsize=1;
+					music.stop();
                     this.game.state.start('Game');
                     break;
 
                 case 2: currentLevel=3;
                     cursorsize=1;
+					music.stop();
                     this.game.state.start('Game');
                     break;
-
+				//Sind alle Bricks aus level 3 abgeraeumt, erscheint der Endgegner
                 case 3: 
                     if(!bowserappeared && !gameover){
                         this.createBowser();
@@ -249,7 +270,7 @@ Break.Game.prototype = {
             }
 
           }
-        
+        // Ist nach 3 Sekunden keine Eingabe zum Cheaten gemacht worden, wird der Cheatstring resettet
         if ((2980<= (this.game.time.now - timeCheckCheat)) && ((this.game.time.now - timeCheckCheat) <= 3200)){
              
              
@@ -258,7 +279,7 @@ Break.Game.prototype = {
         }
         
         
-
+		//Kollisionsdefinitionen zwischen den einzelnen Elementen
         this.physics.arcade.collide(ball, bricks, this.ballHitBrick, null, this);
         this.physics.arcade.collide(ball, middleBricks, this.ballHitMiddleBrick, null, this);
 		this.physics.arcade.collide(ball, strongBricks, this.ballHitStrongBrick, null, this);
@@ -268,6 +289,7 @@ Break.Game.prototype = {
         this.physics.arcade.collide(ball, cursor2, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, cursor, this.ballHitCursor, null, this);
         this.physics.arcade.collide(ball, bowser, this.ballHitBowser, null, this);
+		// Fuer jedes Aktive Powerup oder Lebenpowerup muessen Seperat Kollisionsdefinitionen angelegt werden]
         for(var i=0; i<=powerupsalife; i++){
         this.physics.arcade.collide(powerup[indexPowerArray-i], cursor, this.powerupHitCursor, null, this);
         }
@@ -276,18 +298,28 @@ Break.Game.prototype = {
         this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);   
         }
         
+        for(var i=0; i<=powerupsalife; i++){
+        this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
+        }
+        
+        for(var k=0; k<=lifepowerupsalife; k++){
+        this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);   
+        }
+        
         
         
     },
     
-
-    
+	//Funktion:
+    // Ist die Zeit nach dem Einsammeln eines Infinitypowerups vorbei, wird diese Funktion aufgerufen
     timesUpInfinity: function()
     {
         
             var tempX = cursor.x;
             var tempY = cursor.y;
+			//Cursor wird gekillt und ein neuer in Normalgroesse(Variiert) created
             cursor.kill();
+			//Der Cursor nimmt die alteGroesse wieder an
             switch(cursorsize){
                 case 1:
             this.createCursor1('cursor', tempX, tempY);
@@ -303,44 +335,44 @@ Break.Game.prototype = {
                     break;
             }
     },
-    
+        //Funktion:
+	// Siehe timesUpInfinity
     timesUpFlake: function()
     {
-        
             freezescreen.visible=false;
             cursorspeed=20;
     },
-
+    //Funktion:
     ballHitCursor: function(myBall, myCursor) {
 
         var diff = 0;
 
         if (myBall.x < myCursor.x)
         {
-            //  Ball is on the left-hand side of the paddle
+            //  Ball ist links auf dem Cursor
             diff = myCursor.x - myBall.x;
             myBall.body.velocity.x = (-8 * diff);
         }
         else if (myBall.x > myCursor.x)
         {
-            //  Ball is on the right-hand side of the paddle
+            //  Ball ist rechts auf dem Cursor
             diff = myBall.x - myCursor.x;
             myBall.body.velocity.x = (8 * diff);
         }
         else
         {
-            //  Ball is perfectly in the middle
+            //  Ball ist genau in der Mitte
             myBall.body.velocity.x = 2 + Math.random() * 8;
         }
         
-        //bonuscount=0;
-        //fullbonus=false;
+        //Im  Botmodus wird 1,5 Sekunden nach dem Aufprall eine Zufallsvariable generiert
         if(playercount==0){
        this.game.time.events.add(1500, this.updateBotMultiplier, this);
         }
 
     },
-    
+    //Funktion:
+	// Abfeuern des Balls (tastendruck oder Botmodus)
     releaseBall: function(){
         
         
@@ -354,41 +386,41 @@ Break.Game.prototype = {
                     }
         
     },
-
+    //Funktion:
+	// Definiert was geschieht, wenn ein bestimmtes Powerup den Cursor 1 beruehrt]
     powerupHitCursor:function(myPowerup, myCursor){
         
-        
         myPowerup.kill();
-        
-        
-       
+        // JE nach benutztem Imagefile wird der Effekt veraendert
         switch(myPowerup.frameName){
+			//Cursor wird unendlich gross
             case 'images/infinity.png': 
                 var tempX = cursor.x;
                 var tempY = cursor.y;
                 cursor.kill();
                 this.createCursor1('maxcursor', tempX, tempY);
                 
-                //timeCheckInfinity = this.game.time.now;
                 powerupsalife--;
                 this.game.time.events.add(5000, this.timesUpInfinity, this);
         
                 break;
+			//Cursorgeschwindigkeit wird verlangsamt
             case 'images/snowflake.png': 
                  
                 cursorspeed=5;
                 freezescreen.visible=true;
-                //timeCheckFlake = this.game.time.now;
                 powerupsalife--;
                  this.game.time.events.add(5000, this.timesUpFlake, this);
         
                 break;
+			// MAn erhaelt ein neues Leben
             case 'images/leben.png': if(life<21){
                 life++;
                  lifepowerupsalife--;               
                 this.createHearts();
             }
                 break;
+			//CUrsor wird groesser
             case 'images/cursorplus.png': 
                 if(cursorsize>0 && cursorsize<4){
                     cursorsize++;
@@ -398,6 +430,7 @@ Break.Game.prototype = {
                 var tempY = cursor.y;
                 cursor.kill();
                 powerupsalife--;
+				//JE nach dem wie gross der Cursor zuvor war
                 switch(cursorsize){
                     case 2: this.createCursor1('cursorEins', tempX, tempY);
                        
@@ -409,6 +442,7 @@ Break.Game.prototype = {
                 }
                  
                 break;
+			//CUrsor wird kleiner
             case 'images/cursorminus.png': 
                 if(cursorsize>1 && cursorsize<5){
                     cursorsize--;
@@ -418,6 +452,7 @@ Break.Game.prototype = {
                 cursor.kill();
                 
                 powerupsalife--;
+				//JE nach dem wie gross der Cursor zuvor war
                 switch(cursorsize){
                     case 1: this.createCursor1('cursor', tempX, tempY);
                         
@@ -432,7 +467,8 @@ Break.Game.prototype = {
       
     },
     
-    
+    // FUnktion>
+	// Diese FUnktion enthaelt die gleichen Mechanismen wie function powerupHitCursor
      powerupHitCursor2:function(myPowerup, myCursor){
         
         
@@ -507,10 +543,15 @@ Break.Game.prototype = {
         }
       
     },
-    
+    //Funktion
+	// Diese Funktion bestimmt, ob beim killen eines Blocks ein Featureblock entsteht
+	// Die Chance liegt standardgemaess bei ca. 12%
+	// Die Funktion bestimmt des Weiteren, ob es ein echter Featureblock oder ein Herzblock wird.
+	// Die Chance hieryu liegt jeweils bei 6%
      createFeatureBlock: function(brickX, brickY)
     {
-        var rndd = this.game.rnd.integerInRange(1, 1);
+		//Generieren einer Variable 
+        var rndd = this.game.rnd.integerInRange(1, 7);
         if(rndd==1){
                     var featurebrick;
                     var eggbrick;
@@ -533,16 +574,18 @@ Break.Game.prototype = {
                     
         }
     },
-    
+    //Funktion
+	//Hier wird definiert, welches Powerup beim TReffen eines Featureblocks generiert wird. Es gibt 4 Powerups, deshalb ist die chance 25%
      createPowerup: function(brickX, brickY)
     {
     
-
+		//Generieren einer Randomvariablen
         var rnd = this.game.rnd.integerInRange(1, 4);
         switch(rnd){
             case 1: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'infinity');
                     powerup[indexPowerArray].scale.setTo(0.1);
                     this.physics.arcade.enable(powerup[indexPowerArray]);
+					//Powerup fliegt mit 450 Pixeln pro Sekunde
                     powerup[indexPowerArray].body.velocity.y= 450;
                     powerupsalife++;
                     indexPowerArray++;  
@@ -558,6 +601,7 @@ Break.Game.prototype = {
             case 3: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'cursorplus');
                     powerup[indexPowerArray].scale.setTo(0.2);
                     this.physics.arcade.enable(powerup[indexPowerArray]);
+					//Powerup fliegt mit 450 Pixeln pro Sekunde
                     powerup[indexPowerArray].body.velocity.y= 450;
                     powerupsalife++;
                     indexPowerArray++;  
@@ -566,6 +610,7 @@ Break.Game.prototype = {
             case 4: powerup[indexPowerArray]= this.add.sprite(brickX, brickY, 'cursorminus');
                     powerup[indexPowerArray].scale.setTo(0.2);
                     this.physics.arcade.enable(powerup[indexPowerArray]);
+					//Powerup fliegt mit 450 Pixeln pro Sekunde
                     powerup[indexPowerArray].body.velocity.y= 450;
                     powerupsalife++;
                     indexPowerArray++;  
@@ -578,13 +623,15 @@ Break.Game.prototype = {
         
         
     },
-    
+    //Funktion
+	// Wird ein Eggblock gehittet,  entsteht ein Herzpowerup
     createEgglife: function(brickX, brickY)
     {
                     if(life<21){
                     lifepowerup[indexLifepowerArray]= this.add.sprite(brickX, brickY, 'leben');
                     lifepowerup[indexLifepowerArray].scale.setTo(0.05);
                     this.physics.arcade.enable(lifepowerup[indexLifepowerArray]);
+					//Powerup fliegt mit 450 Pixeln pro Sekunde
                     lifepowerup[indexLifepowerArray].body.velocity.y= 450;
                     lifepowerupsalife++;
                     indexLifepowerArray++;
@@ -592,42 +639,48 @@ Break.Game.prototype = {
         
     },
     
+	//Der Block wird gekillt und die Createpowerupfunktion aufgerufen
     ballHitFeatureBlock: function(myBall, myFBrick) {
         featurebricks.removeFromHash(myFBrick);
         myFBrick.kill();
         this.createPowerup( myFBrick.x, myFBrick.y);
     },
-    
+	
+    //Der Block wird gekillt und die Createegglifefunktion aufgerufen
     ballHitEggBlock: function(myBall, myEBrick) {
         eggbricks.removeFromHash(myEBrick);
         myEBrick.kill();
         this.createEgglife( myEBrick.x, myEBrick.y);
     },
-        
+     //Funktion
+	 // Hier wird definiert was passiert  wenn ein Ball einen Block hittet
     ballHitBrick: function(myBall, myBrick) {
-        var points = 10;
+        var points = 10; // Score plus 10
         score = score +points;
-        this.createFadeScore( myBrick.x, myBrick.y, points);
+        this.createFadeScore( myBrick.x, myBrick.y, points);//Punkteanzeige poppt auf
         scoreText.text = score;
-        bricks.removeFromHash(myBrick);
+        bricks.removeFromHash(myBrick);//Block wird vom gesamt Hash entfernt
         myBrick.kill();
+		//Zaehlen der hintereinander gehitteten Bloecke
         bonuscount++;
         
-        this.createFadeBonus();
+        this.createFadeBonus();// Fadebonus falls genug Bonus gesammelt wurde
         
-        
+        // Eventuell wird ein Featureblock kreiert
         this.createFeatureBlock( myBrick.x, myBrick.y);
         
             
 
     }, 
 
-	
-	ballHitMiddleBrick: function(myBall, myBrick) { //Function which handles what should happen when a Strong Brick has been hitted
-
+	     //Funktion
+	 // Hier wird definiert was passiert  wenn ein Ball einen Block hittet
+	ballHitMiddleBrick: function(myBall, myBrick) { //
+		//Sound wird definiert
 		var middleBrickSound = this.add.audio('HitStrongBrickSound');
 		var BrickSound = this.add.audio('HitBrickSound');
-		if(alreadyHittedBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
+		//Da die Bloecke zweimal gehittet werden muessen, wird hier ueberprueft, wieoft schon gehittet wurde
+		if(alreadyHittedBricks.indexOf(myBrick) == -1){//
 			
 			alreadyHittedBricks[arrayIndex] = myBrick;
 			arrayIndex ++;
@@ -639,19 +692,23 @@ Break.Game.prototype = {
 		}
         
 		else{
+			//wird der Block gekillt  Score +30
             var points = 30;
             score = score +points;
             this.createFadeScore( myBrick.x, myBrick.y, points);
 			
 			scoreText.text = score;
+			//Gekillter Block wird vom hash entfernt
             middleBricks.removeFromHash(myBrick);
 			myBrick.kill();
+			
+			//soundabgespielt
 			BrickSound.play();
             bonuscount++;
-            this.createFadeBonus();
+            this.createFadeBonus();// Bonus
             
             
-            this.createFeatureBlock( myBrick.x, myBrick.y);
+            this.createFeatureBlock( myBrick.x, myBrick.y);//Eventuell wird ein Featureblock erstellt
             
 		}
 			
@@ -659,13 +716,15 @@ Break.Game.prototype = {
 
     }, 	
     
-    
-    ballHitStrongBrick: function(myBall, myBrick) { //Function which handles what should happen when a Strong Brick has been hitted
+         //Funktion
+	 // Hier wird definiert was passiert  wenn ein Ball einen  schweren Block hittet
+    ballHitStrongBrick: function(myBall, myBrick) { //
 
 		var strongBrickSound = this.add.audio('HitStrongBrickSound');
 		var BrickSound = this.add.audio('HitBrickSound');
        
-		if(alreadyHittedStrongBricks.indexOf(myBrick) == -1){//Check if the Brick was already hitted once
+        //Wenn Block einmal gehittet wurde
+		if(alreadyHittedStrongBricks.indexOf(myBrick) == -1){//
 			
 			alreadyHittedStrongBricks[arrayStrongIndex] = myBrick;
             counterHitStrong[arrayStrongIndex] = 1;
@@ -678,26 +737,28 @@ Break.Game.prototype = {
 		else{      
                switch(counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)])
                 {
-                
+                    // Beim zweiten Hit
                     case 1: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
+                            //Verändern der TExtur
                         	myBrick.loadTexture('schwer3',0);
                             if(soundon){
                                     strongBrickSound.play();
                             }
                             break;
-                        
+                        //Beim dritten hit
                           case 2: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
                         	myBrick.loadTexture('schwer4',0);
                             if(soundon){
                                     strongBrickSound.play();
                             }
                             break;
-                        
+                        //BEim vierten Hit wird der Block zerstört 
                           case 3: counterHitStrong[alreadyHittedStrongBricks.indexOf(myBrick)]++;
-                        	
+                        	//plus 100 score
                             var points = 100;
                             score = score +points;
                             scoreText.text = score;
+                            //Punktanzeige
                             this.createFadeScore( myBrick.x, myBrick.y, points);
                            
                             strongBricks.removeFromHash(myBrick);
@@ -705,7 +766,7 @@ Break.Game.prototype = {
                             if(soundon){
                             BrickSound.play();
                            
-                            
+                            //Chance auf featureblock
                             this.createFeatureBlock( myBrick.x, myBrick.y);
                             bonuscount++;
                             this.createFadeBonus();
@@ -723,13 +784,14 @@ Break.Game.prototype = {
     }, 	
 
 
-    
+    //Funktion
+    //Wenn der Ball den Boden berührt
     ballHitBottom: function(myBall, leben) {
 
         if((life != 0)&&(!gameover))
         {
 
-	
+	       // Der Ball wird zerstört und man verliert ein leben
             life--;
             heartdraw--;
             myBall.kill();
@@ -739,6 +801,7 @@ Break.Game.prototype = {
             bonuscount=0;
             fullbonus=false;
             
+            //Befindet sich das Spiel im Botmodus, feuert es den Ball nach 1000 Millisekunden erneut ab
              if(playercount ==0 && !ballreleased){
             
             this.game.time.events.add(1000, this.releaseBall, this);
@@ -750,22 +813,27 @@ Break.Game.prototype = {
            
         
         }
-        else
+        else // Leben alle
         {
+            //Anzeigen eines Gameovertexts
             var gameoverlabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'gameover');
             gameoverlabel.anchor.set(0.5);
             gameoverlabel.scale.setTo(0.7);
             gameoverlabel.alpha = 0;
             this.add.tween(gameoverlabel).to( { alpha: 1}, 10000, Phaser.Easing.Linear.None, true, 0, 0, false);
             
+            //Nun kann Space gedrückt werden um zum  Menü zurückzukehren
             var spacelabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY+90, 'pressspace');
             spacelabel.anchor.set(0.5);
             spacelabel.scale.setTo(0.4);
             spacelabel.alpha = 0;
             this.add.tween(spacelabel).to( { alpha: 1 }, 2000, Phaser.Easing.Linear.None, true, 2000, 0, false);
             
+            //Ball wird gekillt und Spiel ist vorbei
             ball.kill();
             gameover=true;
+            
+            //Starteinstellungen
             currentLevel=1;
             life = 3;
             heartdraw=0;
@@ -777,14 +845,14 @@ Break.Game.prototype = {
             
         }
     },
-
+    //Mithilfe dieser Funktion wird der Ball kreiert
     createBall: function()
         {
         //Hinzufügen des Balls
         ball = this.add.sprite(cursor.x, cursor.y-32, 'ball');
         ball.anchor.set(0.5);
         ball.scale.setTo(0.025);
-
+        //Ball erhält physikalische Eigenschaften
         this.physics.arcade.enable(ball);
         ball.body.angularVelocity = 0;
         ball.body.collideWorldBounds = true;
@@ -793,10 +861,9 @@ Break.Game.prototype = {
         ball.body.immovable = true;
         ball.body.allowGravity = false;
         ball.body.gravity.y = 50;
-        ball.body.angle.enable =true;
-        ball.body.allowRotation=true;
     },
     
+    //Funktion zum erstellen des Cursors für Spieler 1
     createCursor1: function(cursorFrame, x, y)
     {
         
@@ -810,17 +877,21 @@ Break.Game.prototype = {
         
     },
     
+    //Erstellen der Lebensanzeige
     createHearts: function()
     {
         for (heartdraw ; heartdraw < life; heartdraw++)
             {
+                    //Nacheinander aufgereiht
                     var  leben= this.add.sprite(16+(42*heartdraw), 16, 'leben');
                     leben.scale.setTo(0.05);
+                    //Wieviele Leben sollen gemalt werden?
                     heartcounter[heartdraw]= leben;
                 
             }
     },
     
+    //Funktion zum erstellen des Cursors für Spieler 2
     createCursor2: function(cursorFrame, x, y)
     {
         
@@ -833,9 +904,10 @@ Break.Game.prototype = {
         
     },
     
+    //Funktion für PUnkteanzeige
     createFadeScore: function(imageX, imageY, score)
     {
-        switch(score)
+        switch(score)//Je nach Block wird eine andere Punktanzeige kreiert
         {
             case 10:    var scoreimg = this.add.sprite(imageX+10, imageY-15, '10');
                         break;
@@ -845,19 +917,21 @@ Break.Game.prototype = {
                         break;
         }
 
-
+        //Unabhängig vom Block fadet die Anzeige nach oben weg
         scoreimg.scale.setTo(0.05);
         this.add.tween(scoreimg).to( { alpha: 0 }, 1500, Phaser.Easing.Linear.None, true, 0, 0, false);
         this.physics.arcade.enable(scoreimg);
         scoreimg.body.velocity.y = -100;
     },
     
+    //Funktion:
+    // für die Bonusanzeige
      createFadeBonus: function()
     {
         // Helfer um zu verhindern, dass die Eigenschaften des Bildes auch abgerufen werden, wenn es kein Bild gibt
         var helfer = false;
                             
-        switch(bonuscount)
+        switch(bonuscount)// Je nachdem wieviele Blöcke man hintereinander tötet , ohne zu sterben, wird ein anderer Bonus gewährt
         {
             case 5:     if(!fullbonus){     
                             bonusimg = this.add.sprite(this.world.centerX, this.world.centerY, '5hit');
@@ -888,6 +962,8 @@ Break.Game.prototype = {
         }
     },
     
+    //Funktion
+    //kreieren des Endgegners nach level 3
     createBowser: function()
     {
         
@@ -902,6 +978,7 @@ Break.Game.prototype = {
         bowserhit =0;
         bowserappeared=true;
         
+        //Alle Bricvks verschwinden ( wichtig für impossible)
         strongBricks.visible=false;
         strongBricks.enableBody=false;
         middleBricks.visible=false;
@@ -914,14 +991,16 @@ Break.Game.prototype = {
         
     },
     
+    //Ist der Botmodus aktiv, wird hiermit immer bei Cursorhit eine neue Zufallsvariable erzeugt, die bestimmt wo der Cursor den Ball beim nächsten mal treffen soll
     updateBotMultiplier:function(){
             botmultiplier = this.game.rnd.integerInRange(-85, 85);
              
     },
     
+    //Was passiert wenn der Endgegener getroffen wird
     ballHitBowser: function(){
         
-        if(bowserhit==10){
+        if(bowserhit==10){// Hat man Bowser 10x getroffen, endet das Spiel
             var youwonlabel = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'youwon');
             youwonlabel.anchor.set(0.5);
             youwonlabel.scale.setTo(0.7);
@@ -936,6 +1015,7 @@ Break.Game.prototype = {
             
             this.add.tween(bowser).to( { alpha: 0 }, 5000, Phaser.Easing.Linear.None, true, 0, 0, false);
             ball.kill();
+            //Alles auf Anfang
             gameover=true;
             currentLevel=1;
             life = 3;
@@ -943,16 +1023,17 @@ Break.Game.prototype = {
             score=0;
             bonuscount=0;
             bowserappeared=false;
-        }else if(bowserhit<10){
+        }else if(bowserhit<10){ // Counter für getroffenen Bowser
             bowserhit ++;
-            bowser.alpha=10;
         }
     },
     
+    //Funktion
+    //Funktion zur Erfassung von Tastatureingaben
     mykeydownhandler:function( evt )
     {
         timeCheckCheat = this.game.time.now;
-        // Skip it unless it's a-z.
+        // überspringe, falls nicht a-z
         if( evt.which < "A".charCodeAt(0) || evt.which > "Z".charCodeAt(0) )
         {
             
@@ -966,7 +1047,7 @@ Break.Game.prototype = {
        
         cheat = cheat + letter;
         
-        
+        //Hier wird definiert was bei eingabe von Cheats passiert.
         switch(cheat){
             case 'givemelife': 
                                 if(life<21){

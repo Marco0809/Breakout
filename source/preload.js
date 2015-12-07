@@ -9,8 +9,8 @@ Break.Preloader.prototype = {
     this.load.image('cursor', 'images/cursor.png');
     this.load.image('maxcursor', 'images/maxcursor.png');
     this.load.image('cursorEins', 'images/cursorPlusEins.png');
-        this.load.image('cursorZwei', 'images/cursorPlusZwei.png');
-        this.load.image('cursorDrei', 'images/cursorPlusDrei.png');
+    this.load.image('cursorZwei', 'images/cursorPlusZwei.png');
+    this.load.image('cursorDrei', 'images/cursorPlusDrei.png');
     this.load.image('cursor2', 'images/cursor2.png');
     this.load.image('ball', 'images/ball.png');
     this.load.image('bowser', 'images/bowser.png');
@@ -40,19 +40,19 @@ Break.Preloader.prototype = {
     this.load.image('featureblock', 'images/bloecke/featureblock.png');
     this.load.image('eiblock', 'images/bloecke/eiblock.png');
         
-        this.load.image('delete', 'images/bloecke/delete.png');
+    this.load.image('delete', 'images/bloecke/delete.png');
     this.load.image('speichern', 'images/speichern.png');
-        this.load.image('menue', 'images/menue.png');
+    this.load.image('menue', 'images/menue.png');
         
-        this.load.image('reset', 'images/reset.png');
+    this.load.image('reset', 'images/reset.png');
     
-        this.load.image('freeze', 'images/freeze.png');
+    this.load.image('freeze', 'images/freeze.png');
         
     
         
         //Hintergruende
     this.load.image('hintergrund1','images/hintergruende/hintergrund.png');
-        this.load.image('hintergrund2','images/hintergruende/hintergrund2.png');
+    this.load.image('hintergrund2','images/hintergruende/hintergrund2.png');
     this.load.image('hintergrund3','images/hintergruende/hintergrund3.png');
     this.load.image('hintergrund0','images/hintergruende/startbackground.png');
         

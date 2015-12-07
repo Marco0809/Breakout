@@ -73,6 +73,7 @@ function LevelZwei (game)
                     brick.scale.set(0.1);
                     brick.body.bounce.set(1);
                     brick.body.immovable = true;
+                    //Da diese Blöcke mehrmals gehittet werden können, benötigen sie ein solches Array, das in game.js abgefragt wird
                     alreadyHittedBricks[i] = 0;
                     i++;
                 }
