@@ -4,7 +4,6 @@ function LevelDrei (game)
         land = game.add.tileSprite(0, 0, 1024, 768, 'hintergrund3');
         heartdraw=0;
 		
-		var music = game.add.audio('SoundLevel1');
         if(musicon){
 		music.play();
         }

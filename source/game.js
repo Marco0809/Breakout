@@ -58,7 +58,7 @@ Break.Game.prototype = {
 	    //Funktion:
 		//Die Createfunktion ist phasereigen und wird immer bei Spielstart aufgerufen
     create: function() {
-        
+        music = this.game.add.audio('SoundLevel1');
 
         //Variabeln
         ballreleased=false;
@@ -139,9 +139,14 @@ Break.Game.prototype = {
        
         //Falls Ball nicht released ist
         
+        this.game.input.onDown.add(this.releaseBall2, this);
+        
+            
+            
+            
             
             //Spiel Starten / linker Mausklick
-            if ((this.input.activePointer.leftButton.isDown) || (this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) )
+            if (( this.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) )
             {
                 if(!gameover && !ballreleased){
                     this.releaseBall();
@@ -181,7 +186,11 @@ Break.Game.prototype = {
             }
             
             else
+                
             {
+                
+                this.game.input.onDown.add(this.changeCursorX, this);
+                /*
                 if (this.input.mousePointer.isDown)
                 {
 
@@ -191,16 +200,17 @@ Break.Game.prototype = {
                     var yMovePosition = cursor.y ;  
                     var cursorVelocity = 700;
                      cursor.body.bounce.set(100);  
-                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);*/
-                }
+                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);
+                }*/
+            /*
                 else
                 {
                     /* var xMovePosition = cursor.x;
                     var yMovePosition = cursor.y ;
                      var cursorVelocity = 0;
                
-                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);*/
-                }
+                    this.physics.arcade.moveToXY(cursor, xMovePosition, yMovePosition, cursorVelocity);
+                }*/
                     if(!ballreleased){ 
                         ball.x = cursor.x ;}
                 
@@ -244,7 +254,7 @@ Break.Game.prototype = {
         }
 
         // Wenn es keine Bricks mehr gibt -> nächstes Level
-        if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1 && featurebricks.hash.length<1 && eggbricks.hash.length<1)
+        if(strongBricks.hash.length <1 && bricks.hash.length <1 && middleBricks.hash.length<1 && featurebricks.hash.length<1 && eggbricks.hash.length<1 && !gameover)
         {
            
             // Call next Level 
@@ -297,19 +307,21 @@ Break.Game.prototype = {
         for(var k=0; k<=lifepowerupsalife; k++){
         this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor, this.powerupHitCursor, null, this);   
         }
-        
+        /*
         for(var i=0; i<=powerupsalife; i++){
         this.physics.arcade.collide(powerup[indexPowerArray-i], cursor2, this.powerupHitCursor2, null, this);
         }
         
         for(var k=0; k<=lifepowerupsalife; k++){
         this.physics.arcade.collide(lifepowerup[indexLifepowerArray-k], cursor2, this.powerupHitCursor2, null, this);   
-        }
+        }*/
         
         
         
     },
-    
+    changeCursorX: function()
+    {
+    cursor.x=this.input.x;},
 	//Funktion:
     // Ist die Zeit nach dem Einsammeln eines Infinitypowerups vorbei, wird diese Funktion aufgerufen
     timesUpInfinity: function()
@@ -384,6 +396,25 @@ Break.Game.prototype = {
                     else{
                       ball.body.velocity.y=-900;  
                     }
+        
+    },
+        
+        releaseBall2: function(){
+        
+        if(!ballreleased && !gameover){
+                    ball.body.allowGravity = true;
+                    ballreleased = true;
+                    ball.body.immovable = false;
+                    if(difficulty==1){
+                    ball.body.velocity.y=-450;}
+                    else{
+                      ball.body.velocity.y=-900;  
+                    }
+        }
+            else if (gameover){
+                music.stop();
+                    this.state.start('MainMenu');
+            }
         
     },
     //Funktion:

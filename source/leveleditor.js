@@ -184,6 +184,7 @@ update: function(){
             
             else  if ( this.game.input.x>=bg1Button.x && this.game.input.x<(bg1Button.x+114) && this.game.input.y>=bg1Button.y && this.game.input.y<(bg1Button.y+61))
 			{
+                localStorage["hintergrund"] = 1;	
 				land.loadTexture('hintergrund1',0);
                 choseBackground=1;
 				
@@ -191,6 +192,7 @@ update: function(){
             
             else  if ( this.game.input.x>=bg2Button.x && this.game.input.x<(bg2Button.x+114) && this.game.input.y>=bg2Button.y && this.game.input.y<(bg2Button.y+61))
 			{
+                localStorage["hintergrund"] = 2;
 				land.loadTexture('hintergrund2',0);
                 choseBackground=1;
 				
@@ -198,6 +200,7 @@ update: function(){
             
             else  if ( this.game.input.x>=bg3Button.x && this.game.input.x<(bg3Button.x+114) && this.game.input.y>=bg3Button.y && this.game.input.y<(bg3Button.y+61))
 			{
+                localStorage["hintergrund"] = 3;
 				land.loadTexture('hintergrund3',0);
                 choseBackground=1;
 				

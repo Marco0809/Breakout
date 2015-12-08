@@ -2,14 +2,10 @@ function ownLevel (game, myLevel)
 	{
 		
 		 //Hintergrund
-        switch(OLIVIERSVARIABLE){
-            case 1: land = game.add.tileSprite(0, 0, 1024, 768, 'hintergrund1');
-                    break;
-            case 2: land = game.add.tileSprite(0, 0, 1024, 768, 'hintergrund2');
-                    break;
-            case 3: land = game.add.tileSprite(0, 0, 1024, 768, 'hintergrund3');
-                    break;
-        }
+        
+            land = game.add.tileSprite(0, 0, 1024, 768, 'hintergrund1');
+           
+            
 		
 		var music = game.add.audio('SoundLevel1');
         if(musicon){

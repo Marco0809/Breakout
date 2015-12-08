@@ -4,7 +4,6 @@ function LevelEins (game)
 		 //Hintergrund
         land = game.add.tileSprite(0, 0, 1024, 768, 'hintergrund1');
 		
-		var music = game.add.audio('SoundLevel1');
         if(musicon){
 		music.play();
         }
@@ -30,6 +29,7 @@ function LevelEins (game)
         bottom = game.add.group();
         bottom.enableBody = true;
         
+       
         //Algorithmus zur Blockplatzierung
    
             for (var y = 0; y < 3; y++)
